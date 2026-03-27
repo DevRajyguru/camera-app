@@ -47,9 +47,9 @@ const FilterPanel = ({
       </div>
     </div>
 
-    <div className="space-y-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-400">Price range</p>
-      <div className="flex gap-2">
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Price range</p>
+            <div className="flex gap-2">
         <input
           type="number"
           min="0"
@@ -69,13 +69,13 @@ const FilterPanel = ({
       </div>
     </div>
 
-    <div className="space-y-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-400">Brands</p>
+      <div className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Brands</p>
       <div className="grid gap-2">
         {brandOptions.map((brand) => (
           <label
             key={brand}
-            className="flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 transition hover:border-indigo-500 hover:text-indigo-700"
+            className="flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-800 transition hover:border-indigo-500 hover:text-indigo-700"
           >
             <input
               type="checkbox"
@@ -89,13 +89,13 @@ const FilterPanel = ({
       </div>
     </div>
 
-    <div className="space-y-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-400">Category</p>
+      <div className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Category</p>
       <div className="grid gap-2">
         {categoryOptions.map((category) => (
           <label
             key={category}
-            className="flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 transition hover:border-indigo-500 hover:text-indigo-700"
+            className="flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-800 transition hover:border-indigo-500 hover:text-indigo-700"
           >
             <input
               type="checkbox"
@@ -109,13 +109,13 @@ const FilterPanel = ({
       </div>
     </div>
 
-    <div className="space-y-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-400">Sensor type</p>
+      <div className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Sensor type</p>
       <div className="grid gap-2">
         {sensorOptions.map((sensor) => (
           <label
             key={sensor}
-            className="flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 transition hover:border-indigo-500 hover:text-indigo-700"
+            className="flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-800 transition hover:border-indigo-500 hover:text-indigo-700"
           >
             <input
               type="checkbox"
@@ -255,7 +255,7 @@ const ProductsPage = () => {
             </div>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
             {visibleProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

@@ -7,23 +7,43 @@ import { productsCatalog } from '../data/sampleProducts.js'
 const ProductDetailsPage = () => {
   const { id } = useParams()
   const [activeTab, setActiveTab] = useState('specs')
+  const productId = Number(id)
 
   const product = useMemo(
-    () => productsCatalog.find((item) => item.id === id) ?? productsCatalog[0],
-    [id],
+    () => productsCatalog.find((item) => item.id === productId),
+    [productId],
   )
+
+  const formattedPrice = product
+    ? product.priceLabel ??
+      new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0,
+      }).format(product.priceValue ?? 0)
+    : '₹0'
 
   const similarProducts = useMemo(
     () =>
-      productsCatalog
-        .filter((item) => item.category === product.category && item.id !== product.id)
-        .slice(0, 3),
+      product
+        ? productsCatalog
+            .filter((item) => item.category === product.category && item.id !== product.id)
+            .slice(0, 3)
+        : [],
     [product],
   )
 
-  const galleryImages = [product.image]
+  const galleryImages = product ? [product.image] : []
   while (galleryImages.length < 4) {
-    galleryImages.push(product.image)
+    galleryImages.push(product?.image ?? '')
+  }
+
+  if (!product) {
+    return (
+      <div className="p-6">
+        <p className="text-lg font-semibold text-gray-900">Product not found</p>
+      </div>
+    )
   }
 
   return (
@@ -119,7 +139,7 @@ const ProductDetailsPage = () => {
           <h2 className="text-xl font-semibold text-gray-900">Similar products</h2>
           <p className="text-sm text-gray-500">Pick another hero</p>
         </div>
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
           {similarProducts.map((item) => (
             <ProductCard key={item.id} product={item} />
           ))}

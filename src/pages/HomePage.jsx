@@ -109,7 +109,7 @@ const HomePage = () => (
         <h2 className="text-xl md:text-2xl font-semibold tracking-wide text-gray-900">Trending Products</h2>
         <p className="text-sm text-gray-500">Curated by our editors for cinematic stories.</p>
       </div>
-      <div className="grid gap-6 md:gap-8 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid items-stretch gap-6 md:gap-8 md:grid-cols-2 xl:grid-cols-3">
         {trendingProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
@@ -123,7 +123,7 @@ const HomePage = () => (
         <h2 className="text-xl md:text-2xl font-semibold tracking-wide text-gray-900">New Launches</h2>
         <p className="text-sm text-gray-500">Fresh drops ready for your next act.</p>
       </div>
-      <div className="grid gap-6 md:gap-8 md:grid-cols-2">
+      <div className="grid items-stretch gap-6 md:gap-8 md:grid-cols-2">
         {newLaunches.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
