@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const ProductCard = ({ product }) => {
@@ -12,25 +12,12 @@ const ProductCard = ({ product }) => {
     }).format(product.priceValue ?? 0)
 
   return (
-    <motion.article
-      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-    >
-      <div className="relative overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.name}
-          loading="lazy"
-          onError={(event) => {
-            event.currentTarget.src = 'https://via.placeholder.com/400x300?text=Camera'
-          }}
-          className="h-48 w-full object-cover rounded-xl transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent" />
-        <span className="absolute inset-x-0 bottom-3 px-4 text-xs font-semibold uppercase tracking-[0.4em] text-white">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div className="relative">
+        <div className="h-40 bg-gray-100 flex items-center justify-center rounded-t-2xl">
+          <p className="text-xs text-gray-400">No Image</p>
+        </div>
+        <span className="absolute inset-x-0 bottom-3 mx-auto w-max rounded-full bg-black/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-white shadow-lg">
           {product.category}
         </span>
       </div>
@@ -56,8 +43,8 @@ const ProductCard = ({ product }) => {
           View
         </button>
       </div>
-    </motion.article>
+    </article>
   )
 }
 
-export default ProductCard
+export default memo(ProductCard)

@@ -78,15 +78,9 @@ const HomePage = () => (
             className="flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
           >
             <div className="relative overflow-hidden">
-              <img
-                src={category.image}
-                alt={category.title}
-                loading="lazy"
-                onError={(event) => {
-                  event.currentTarget.src = 'https://via.placeholder.com/400x300?text=Camera'
-                }}
-                className="h-48 w-full object-cover rounded-xl transition-transform duration-500 hover:scale-105"
-              />
+              <div className="h-48 w-full flex items-center justify-center bg-gray-100 rounded-xl">
+                <p className="text-sm text-gray-500">No Image</p>
+              </div>
               <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/50 to-transparent" />
             </div>
             <div className="space-y-3 px-6 py-6">

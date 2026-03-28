@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard.jsx'
 import Button from '../components/Button.jsx'
 import { productsCatalog } from '../data/sampleProducts.js'
+import { useStore } from '../store/useStore.js'
 
-const FALLBACK_IMAGE = 'https://via.placeholder.com/800x600?text=Camera'
 const currencyFormatter = new Intl.NumberFormat('en-IN', {
   style: 'currency',
   currency: 'INR',
@@ -16,52 +16,40 @@ const tabOptions = [
   { id: 'description', label: 'Description' },
 ]
 
+const SimilarProductsList = memo(function SimilarProductsList({ products }) {
+  if (!products.length) {
+    return <p className="text-sm text-gray-500">No additional matches in this category yet.</p>
+  }
+
+  return (
+    <div className="flex gap-4 overflow-x-auto pb-3">
+      {products.map((item) => (
+        <div key={item.id} className="min-w-[260px] flex-shrink-0">
+          <ProductCard product={item} />
+        </div>
+      ))}
+    </div>
+  )
+})
+
+SimilarProductsList.displayName = 'SimilarProductsList'
+
 const ProductDetailsPage = () => {
   const { id } = useParams()
   const productId = Number(id)
   const [activeTab, setActiveTab] = useState('specs')
-  const [activeImageIndex, setActiveImageIndex] = useState(0)
+  const addToCart = useStore((state) => state.addToCart)
+  const addToWishlist = useStore((state) => state.addToWishlist)
 
-  const product = useMemo(
-    () => productsCatalog.find((item) => item.id === productId),
-    [productId],
-  )
+  const product = productsCatalog.find((item) => item.id === productId)
 
-  const formattedPrice = product
-    ? product.priceLabel ?? currencyFormatter.format(product.priceValue ?? 0)
-    : '₹0'
-
-  const similarProducts = useMemo(() => {
+  const formattedPrice = useMemo(() => {
     if (!product) {
-      return []
+      return '?0'
     }
 
-    return productsCatalog
-      .filter((item) => item.category === product.category && item.id !== product.id)
-      .slice(0, 4)
+    return product.priceLabel ?? currencyFormatter.format(product.priceValue ?? 0)
   }, [product])
-
-  const galleryImages = useMemo(() => {
-    if (!product) {
-      return []
-    }
-
-    const base = Array.isArray(product.gallery) ? product.gallery.filter(Boolean) : []
-    if (product.image && !base.includes(product.image)) {
-      base.unshift(product.image)
-    }
-
-    const filled = [...base]
-    while (filled.length < 4) {
-      filled.push(product.image ?? '')
-    }
-
-    return filled.filter(Boolean).slice(0, 4)
-  }, [product])
-
-  useEffect(() => {
-    setActiveImageIndex(0)
-  }, [product?.id])
 
   const specEntries = useMemo(() => {
     if (!product) {
@@ -89,9 +77,15 @@ const ProductDetailsPage = () => {
     return [...customSpecs, ...baseSpecs]
   }, [product])
 
-  const handleImageError = (event) => {
-    event.currentTarget.src = FALLBACK_IMAGE
-  }
+  const similarProducts = useMemo(() => {
+    if (!product) {
+      return []
+    }
+
+    return productsCatalog
+      .filter((item) => item.category === product.category && item.id !== product.id)
+      .slice(0, 4)
+  }, [productId])
 
   if (!product) {
     return (
@@ -102,104 +96,108 @@ const ProductDetailsPage = () => {
   }
 
   return (
-    <div className="space-y-12 p-4 pb-16 md:p-6 lg:p-10">
-      <div className="space-y-6 rounded-3xl bg-white px-4 py-6 shadow-lg md:px-8 md:py-8">
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
-          <div className="space-y-4">
-            <div className="grid gap-3 md:grid-cols-2">
-              {galleryImages.map((src, index) => (
+    <div className="mx-auto max-w-6xl space-y-12 py-16 px-4 sm:px-6 lg:px-0">
+      <section className="grid gap-12 lg:grid-cols-2">
+        <div className="space-y-4">
+          <div className="flex items-center justify-center h-[400px] rounded-2xl bg-gray-100">
+            <p className="text-gray-500 text-sm">Image unavailable</p>
+          </div>
+        </div>
+        <div className="space-y-6 rounded-2xl bg-white/70 p-6 shadow-lg backdrop-blur-md">
+          <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.5em] text-indigo-600">
+            <span className="rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1">
+              {product.category}
+            </span>
+            <span className="rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-slate-600">
+              {product.sensor}
+            </span>
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-3xl font-semibold text-gray-900">{product.name}</h1>
+            <p className="text-sm text-gray-600">{product.summary}</p>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <p className="text-2xl font-bold text-indigo-600">{formattedPrice}</p>
+            <p className="text-sm font-medium text-gray-500">Inclusive of all taxes</p>
+          </div>
+          <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="rounded-xl border border-dashed border-gray-200 bg-white/80 px-4 py-3 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-700">Brand</p>
+              <p className="text-lg font-semibold text-gray-900">{product.brand}</p>
+            </div>
+            <div className="rounded-xl border border-dashed border-gray-200 bg-white/80 px-4 py-3 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-700">Sensor</p>
+              <p className="text-lg font-semibold text-gray-900">{product.sensor}</p>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <Button
+              className="h-12 px-6 shadow-md"
+              onClick={() => addToCart(product)}
+            >
+              Add to Cart
+            </Button>
+            <Button
+              variant="ghost"
+              className="h-12 px-6 shadow-md text-indigo-600"
+              onClick={() => addToWishlist(product)}
+            >
+              Add to Wishlist
+            </Button>
+          </div>
+        </div>
+      </section>
+      <section className="space-y-6 rounded-2xl bg-white/70 p-6 shadow-lg backdrop-blur-md">
+        <div className="flex items-center justify-between">
+          <div className="flex gap-6">
+            {tabOptions.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className="relative pb-3 text-sm font-semibold uppercase tracking-[0.4em] text-gray-600 transition hover:text-gray-900"
+              >
+                {tab.label}
+                <span className="absolute left-0 bottom-0 h-0.5 w-full bg-indigo-600 transition-transform duration-300" />
+              </button>
+            ))}
+          </div>
+          <p className="text-xs font-semibold tracking-[0.3em] text-gray-500">Deep dive</p>
+        </div>
+        <div>
+          {activeTab === 'specs' ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              {specEntries.map((spec) => (
                 <div
-                  key={`${src}-${index}`}
-                  className="overflow-hidden rounded-2xl border border-gray-200"
+                  key={spec.label}
+                  className="rounded-2xl border border-gray-100 bg-white/80 px-5 py-4 shadow-sm"
                 >
-                  <img
-                    src={src}
-                    alt={`${product.name} gallery ${index + 1}`}
-                    loading="lazy"
-                    className="h-48 w-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
+                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-gray-700">
+                    {spec.label}
+                  </p>
+                  <p className="text-base font-semibold text-black">{spec.value}</p>
                 </div>
               ))}
             </div>
-          </div>
-          <div className="space-y-5">
-            <p className="text-xs uppercase tracking-[0.6em] text-gray-400">Product details</p>
-            <h1 className="text-3xl font-semibold text-gray-900">{product.name}</h1>
-            <p className="text-xl font-bold text-indigo-600">{product.priceLabel}</p>
-            <div className="space-y-3 rounded-2xl border border-gray-200 bg-gray-50 p-4">
-              <p className="text-sm font-semibold text-gray-500">Brand</p>
-              <p className="text-lg font-semibold text-gray-900">{product.brand}</p>
-              <p className="text-sm font-semibold text-gray-500">Sensor</p>
-              <p className="text-lg font-semibold text-gray-900">{product.sensor}</p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Button className="px-4 py-2 uppercase tracking-[0.4em]">Add to Compare</Button>
-              <Button className="border border-gray-200 bg-white px-4 py-2 text-gray-700 hover:text-white">Add to Wishlist</Button>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] transition ${
-                activeTab === 'specs'
-                  ? 'bg-indigo-500 text-white'
-                  : 'bg-white text-gray-500 border border-gray-200'
-              }`}
-              onClick={() => setActiveTab('specs')}
-            >
-              Specifications
-            </button>
-            <button
-              type="button"
-              className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] transition ${
-                activeTab === 'description'
-                  ? 'bg-indigo-500 text-white'
-                  : 'bg-white text-gray-500 border border-gray-200'
-              }`}
-              onClick={() => setActiveTab('description')}
-            >
-              Description
-            </button>
-          </div>
-          {activeTab === 'specs' ? (
-            <div className="space-y-3 rounded-2xl border border-gray-200 bg-white p-4">
-              <div className="grid gap-3 md:grid-cols-2">
-                <p className="text-sm font-semibold text-gray-500">Sensor</p>
-                <p className="text-sm text-gray-900">{product.sensor}</p>
-                <p className="text-sm font-semibold text-gray-500">Category</p>
-                <p className="text-sm text-gray-900">{product.category}</p>
-                <p className="text-sm font-semibold text-gray-500">Available since</p>
-                <p className="text-sm text-gray-900">
-                  {new Date(product.createdAt).toLocaleDateString('en-IN')}
-                </p>
-              </div>
-            </div>
           ) : (
-            <div className="rounded-2xl border border-gray-200 bg-white p-4 text-sm text-gray-600">
+            <div className="space-y-4 text-sm leading-relaxed text-gray-700">
+              <p>{product.description}</p>
               <p>
-                {product.name} blends premium engineering with intuitive ergonomics. The hybrid
-                autofocus, precise color science, and durable alloy body make it ready for the
-                toughest shoots. The kit is built to last and stay cool under pressure.
+                Crafted for demanding creators, this rig pairs intuitive controls with premium
+                finishing touches so every shoot feels effortless.
               </p>
             </div>
           )}
         </div>
-      </div>
-
-      <div className="space-y-4">
+      </section>
+      <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900">Similar products</h2>
-          <p className="text-sm text-gray-500">Pick another hero</p>
+          <h2 className="text-2xl font-semibold text-gray-900">Similar products</h2>
+          <p className="text-sm font-medium text-gray-600">Select another hero</p>
         </div>
-        <div className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {similarProducts.map((item) => (
-            <ProductCard key={item.id} product={item} />
-          ))}
-        </div>
-      </div>
+        <SimilarProductsList products={similarProducts} />
+      </section>
     </div>
   )
 }

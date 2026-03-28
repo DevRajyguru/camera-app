@@ -4,51 +4,20 @@ export const categoryTiles = [
   {
     title: 'DSLR',
     subtitle: 'Pro Capture',
-    image: 'https://images.unsplash.com/photo-1519183071298-a2962be96f8d?auto=format&fit=crop&w=800&q=80',
   },
   {
     title: 'Mirrorless',
     subtitle: 'Lightweight power',
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
   },
   {
     title: 'Lenses',
     subtitle: 'Sharp optics',
-    image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80',
   },
   {
     title: 'Accessories',
     subtitle: 'Finish the kit',
-    image: 'https://images.unsplash.com/photo-1495121605193-b116b5b09a8c?auto=format&fit=crop&w=800&q=80',
   },
 ]
-
-const GALLERY_ASSETS = {
-  DSLR: [
-    'https://images.unsplash.com/photo-1505740106531-4243f3831f3f?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
-  ],
-  Mirrorless: [
-    'https://images.unsplash.com/photo-1516035054877-2bd49e2bf4db?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1200&q=80',
-  ],
-  Lenses: [
-    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1519183071298-a2962be96f8d?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&q=80',
-  ],
-  Accessories: [
-    'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
-  ],
-}
 
 const products = [
   {
@@ -60,8 +29,6 @@ const products = [
     priceValue: 199117,
     priceLabel: '₹1,99,117',
     createdAt: '2026-03-16T08:00:00Z',
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
-    gallery: [...GALLERY_ASSETS.Mirrorless],
     summary: 'Cinematic mirrorless for hybrid storytellers who demand refined motion and still capture.',
     description:
       'Summicron Mirrorless blends flagship diffraction-limited optics with a lightning-fast AF system. The 24MP stacked sensor and 5-axis in-body stabilization deliver sharp detail across stills and 10-bit 4K footage, while a rugged magnesium alloy body stays cool during extended shoots.',
@@ -81,8 +48,6 @@ const products = [
     priceValue: 99517,
     priceLabel: '₹99,517',
     createdAt: '2026-03-14T08:00:00Z',
-    image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80',
-    gallery: [...GALLERY_ASSETS.Lenses],
     summary: 'Ultra-fast prime engineered for portrait and cinematic work.',
     description:
       'Edge Prime Lens delivers razor-sharp clarity and a creamy bokeh thanks to its f/1.4 aperture and precision-ground elements. ASC and Subwavelength coatings keep flares in check, while the linear STM autofocus ensures whisper-quiet performance for both photo and video.',
@@ -102,8 +67,6 @@ const products = [
     priceValue: 62167,
     priceLabel: '₹62,167',
     createdAt: '2026-03-12T08:00:00Z',
-    image: 'https://images.unsplash.com/photo-1495121605193-b116b5b09a8c?auto=format&fit=crop&w=800&q=80',
-    gallery: [...GALLERY_ASSETS.Accessories],
     summary: 'High-speed studio flash with TTL precision and dust-resistant housing.',
     description:
       'Rogue Studio Flash charges in a flash and supports TTL, HSS, and multi-flash sync. The built-in diffusion dome is perfect for soft portraits, while durable circuitry keeps color temperature locked even after marathon sessions.',
@@ -123,8 +86,6 @@ const products = [
     priceValue: 145067,
     priceLabel: '₹1,45,067',
     createdAt: '2026-03-10T08:00:00Z',
-    image: 'https://images.unsplash.com/photo-1519183071298-a2962be96f8d?auto=format&fit=crop&w=800&q=80',
-    gallery: [...GALLERY_ASSETS.DSLR],
     summary: 'Tactile DSLR built for editorial, wildlife, and adventure stories.',
     description:
       'Atlas DSLR Pro combines a 26MP full-frame sensor with a responsive 1/8000s shutter and refined ergonomics. The deep grip, dual command dials, and weather-sealed body keep you steady across long expeditions.',
@@ -144,8 +105,6 @@ const products = [
     priceValue: 244850,
     priceLabel: '₹2,44,850',
     createdAt: '2026-03-08T08:00:00Z',
-    image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80',
-    gallery: [...GALLERY_ASSETS.Lenses],
     summary: 'Cinema-grade prime for narrative filmmakers.',
     description:
       'Nova Cine Lens brings exquisite bokeh, smooth focus breathing, and solid build quality. The nano GI and HT-EBC coatings prevent flares while offering accurate color for film and high-end video.',
@@ -165,8 +124,6 @@ const products = [
     priceValue: 174500,
     priceLabel: '₹1,74,500',
     createdAt: '2026-03-06T08:00:00Z',
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
-    gallery: [...GALLERY_ASSETS.Mirrorless],
     summary: 'APS-C body with flagship-inspired video tools.',
     description:
       'Horizon APS-C Body pairs a 26MP stacked sensor with fast burst shooting and 5-axis IBIS. Dual card slots and crisp EVF keep professionals confident on-set, while S-Cinetone ensures beautiful skin tones.',
@@ -186,8 +143,6 @@ const products = [
     priceValue: 83800,
     priceLabel: '₹83,800',
     createdAt: '2026-03-04T08:00:00Z',
-    image: 'https://images.unsplash.com/photo-1495121605193-b116b5b09a8c?auto=format&fit=crop&w=800&q=80',
-    gallery: [...GALLERY_ASSETS.Accessories],
     summary: 'Modular grip kit for handheld and rigged workflows.',
     description:
       'Prism Grip Kit adds counterbalanced handles, dedicated shutter releases, and HDMI monitoring support. Its magnesium alloy frame stays rigid but light, making long handheld takes more comfortable.',
@@ -207,8 +162,6 @@ const products = [
     priceValue: 211500,
     priceLabel: '₹2,11,500',
     createdAt: '2026-03-02T08:00:00Z',
-    image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80',
-    gallery: [...GALLERY_ASSETS.Lenses],
     summary: 'Timeless portrait prime with modern coatings and autofocus.',
     description:
       'Apex Prime 85 is built for character portraits and editorial cinema. Its 11-element design keeps highlights in check while the silent linear STM AF and high-precision aperture ring give you tactile control.',
@@ -224,4 +177,3 @@ const products = [
 export const productsCatalog = products
 export const trendingProducts = products.slice(0, 3)
 export const newLaunches = products.slice(3, 6)
-
