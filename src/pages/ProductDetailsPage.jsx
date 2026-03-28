@@ -1,13 +1,26 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard.jsx'
 import Button from '../components/Button.jsx'
 import { productsCatalog } from '../data/sampleProducts.js'
 
+const FALLBACK_IMAGE = 'https://via.placeholder.com/800x600?text=Camera'
+const currencyFormatter = new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: 'INR',
+  maximumFractionDigits: 0,
+})
+
+const tabOptions = [
+  { id: 'specs', label: 'Specifications' },
+  { id: 'description', label: 'Description' },
+]
+
 const ProductDetailsPage = () => {
   const { id } = useParams()
-  const [activeTab, setActiveTab] = useState('specs')
   const productId = Number(id)
+  const [activeTab, setActiveTab] = useState('specs')
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
 
   const product = useMemo(
     () => productsCatalog.find((item) => item.id === productId),
@@ -15,27 +28,69 @@ const ProductDetailsPage = () => {
   )
 
   const formattedPrice = product
-    ? product.priceLabel ??
-      new Intl.NumberFormat('en-IN', {
-        style: 'currency',
-        currency: 'INR',
-        maximumFractionDigits: 0,
-      }).format(product.priceValue ?? 0)
+    ? product.priceLabel ?? currencyFormatter.format(product.priceValue ?? 0)
     : '₹0'
 
-  const similarProducts = useMemo(
-    () =>
-      product
-        ? productsCatalog
-            .filter((item) => item.category === product.category && item.id !== product.id)
-            .slice(0, 3)
-        : [],
-    [product],
-  )
+  const similarProducts = useMemo(() => {
+    if (!product) {
+      return []
+    }
 
-  const galleryImages = product ? [product.image] : []
-  while (galleryImages.length < 4) {
-    galleryImages.push(product?.image ?? '')
+    return productsCatalog
+      .filter((item) => item.category === product.category && item.id !== product.id)
+      .slice(0, 4)
+  }, [product])
+
+  const galleryImages = useMemo(() => {
+    if (!product) {
+      return []
+    }
+
+    const base = Array.isArray(product.gallery) ? product.gallery.filter(Boolean) : []
+    if (product.image && !base.includes(product.image)) {
+      base.unshift(product.image)
+    }
+
+    const filled = [...base]
+    while (filled.length < 4) {
+      filled.push(product.image ?? '')
+    }
+
+    return filled.filter(Boolean).slice(0, 4)
+  }, [product])
+
+  useEffect(() => {
+    setActiveImageIndex(0)
+  }, [product?.id])
+
+  const specEntries = useMemo(() => {
+    if (!product) {
+      return []
+    }
+
+    const baseSpecs = [
+      { label: 'Sensor', value: product.sensor },
+      { label: 'Category', value: product.category },
+      { label: 'Brand', value: product.brand },
+      {
+        label: 'Available since',
+        value: new Date(product.createdAt).toLocaleDateString('en-IN', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        }),
+      },
+    ]
+
+    const customSpecs = Array.isArray(product.specs)
+      ? product.specs.filter((entry) => !baseSpecs.some((row) => row.label === entry.label))
+      : []
+
+    return [...customSpecs, ...baseSpecs]
+  }, [product])
+
+  const handleImageError = (event) => {
+    event.currentTarget.src = FALLBACK_IMAGE
   }
 
   if (!product) {

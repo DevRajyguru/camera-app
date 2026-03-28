@@ -23,6 +23,33 @@ export const categoryTiles = [
   },
 ]
 
+const GALLERY_ASSETS = {
+  DSLR: [
+    'https://images.unsplash.com/photo-1505740106531-4243f3831f3f?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+  ],
+  Mirrorless: [
+    'https://images.unsplash.com/photo-1516035054877-2bd49e2bf4db?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1200&q=80',
+  ],
+  Lenses: [
+    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1519183071298-a2962be96f8d?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&q=80',
+  ],
+  Accessories: [
+    'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+  ],
+}
+
 const products = [
   {
     id: 1,
@@ -31,8 +58,19 @@ const products = [
     category: 'Mirrorless',
     sensor: 'Full Frame',
     priceValue: 199117,
+    priceLabel: '₹1,99,117',
     createdAt: '2026-03-16T08:00:00Z',
     image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
+    gallery: [...GALLERY_ASSETS.Mirrorless],
+    summary: 'Cinematic mirrorless for hybrid storytellers who demand refined motion and still capture.',
+    description:
+      'Summicron Mirrorless blends flagship diffraction-limited optics with a lightning-fast AF system. The 24MP stacked sensor and 5-axis in-body stabilization deliver sharp detail across stills and 10-bit 4K footage, while a rugged magnesium alloy body stays cool during extended shoots.',
+    specs: [
+      { label: 'Resolution', value: '24MP backside-illuminated sensor' },
+      { label: 'Video', value: '4K/60p 10-bit with S-Log3' },
+      { label: 'ISO Range', value: '100 - 51200 expandable to 102400' },
+      { label: 'Stabilization', value: '5-axis IBIS with active priority' },
+    ],
   },
   {
     id: 2,
@@ -41,8 +79,19 @@ const products = [
     category: 'Lenses',
     sensor: 'Full Frame',
     priceValue: 99517,
+    priceLabel: '₹99,517',
     createdAt: '2026-03-14T08:00:00Z',
     image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80',
+    gallery: [...GALLERY_ASSETS.Lenses],
+    summary: 'Ultra-fast prime engineered for portrait and cinematic work.',
+    description:
+      'Edge Prime Lens delivers razor-sharp clarity and a creamy bokeh thanks to its f/1.4 aperture and precision-ground elements. ASC and Subwavelength coatings keep flares in check, while the linear STM autofocus ensures whisper-quiet performance for both photo and video.',
+    specs: [
+      { label: 'Mount', value: 'RF mount with electronic aperture control' },
+      { label: 'Aperture', value: 'f/1.4 constant' },
+      { label: 'Elements', value: '10 elements in 8 groups' },
+      { label: 'Coating', value: 'ASC + Subwavelength anti-reflective' },
+    ],
   },
   {
     id: 3,
@@ -51,8 +100,19 @@ const products = [
     category: 'Accessories',
     sensor: 'APS-C',
     priceValue: 62167,
+    priceLabel: '₹62,167',
     createdAt: '2026-03-12T08:00:00Z',
     image: 'https://images.unsplash.com/photo-1495121605193-b116b5b09a8c?auto=format&fit=crop&w=800&q=80',
+    gallery: [...GALLERY_ASSETS.Accessories],
+    summary: 'High-speed studio flash with TTL precision and dust-resistant housing.',
+    description:
+      'Rogue Studio Flash charges in a flash and supports TTL, HSS, and multi-flash sync. The built-in diffusion dome is perfect for soft portraits, while durable circuitry keeps color temperature locked even after marathon sessions.',
+    specs: [
+      { label: 'Power', value: '650Ws with stepless control' },
+      { label: 'Guide Number', value: '60m @ ISO 100' },
+      { label: 'Recycling', value: '0.05 - 1.5 seconds' },
+      { label: 'Compatibility', value: 'TTL + HSS for Nikon/Canon' },
+    ],
   },
   {
     id: 4,
@@ -61,8 +121,19 @@ const products = [
     category: 'DSLR',
     sensor: 'Full Frame',
     priceValue: 145067,
+    priceLabel: '₹1,45,067',
     createdAt: '2026-03-10T08:00:00Z',
     image: 'https://images.unsplash.com/photo-1519183071298-a2962be96f8d?auto=format&fit=crop&w=800&q=80',
+    gallery: [...GALLERY_ASSETS.DSLR],
+    summary: 'Tactile DSLR built for editorial, wildlife, and adventure stories.',
+    description:
+      'Atlas DSLR Pro combines a 26MP full-frame sensor with a responsive 1/8000s shutter and refined ergonomics. The deep grip, dual command dials, and weather-sealed body keep you steady across long expeditions.',
+    specs: [
+      { label: 'Resolution', value: '26MP full-frame CMOS' },
+      { label: 'ISO Range', value: '100 - 64000 expandable to 102400' },
+      { label: 'Shutter', value: '1/8000s mechanical + 1/32000s electronic' },
+      { label: 'Flash Sync', value: '1/250s max' },
+    ],
   },
   {
     id: 5,
@@ -71,8 +142,19 @@ const products = [
     category: 'Lenses',
     sensor: 'APS-C',
     priceValue: 244850,
+    priceLabel: '₹2,44,850',
     createdAt: '2026-03-08T08:00:00Z',
     image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80',
+    gallery: [...GALLERY_ASSETS.Lenses],
+    summary: 'Cinema-grade prime for narrative filmmakers.',
+    description:
+      'Nova Cine Lens brings exquisite bokeh, smooth focus breathing, and solid build quality. The nano GI and HT-EBC coatings prevent flares while offering accurate color for film and high-end video.',
+    specs: [
+      { label: 'Type', value: 'Prime cine lens' },
+      { label: 'Aperture', value: 'f/1.2 constant' },
+      { label: 'Coating', value: 'Nano-GI + HT-EBC' },
+      { label: 'Focus Drive', value: 'Linear STM motor' },
+    ],
   },
   {
     id: 6,
@@ -81,8 +163,19 @@ const products = [
     category: 'Mirrorless',
     sensor: 'APS-C',
     priceValue: 174500,
+    priceLabel: '₹1,74,500',
     createdAt: '2026-03-06T08:00:00Z',
     image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
+    gallery: [...GALLERY_ASSETS.Mirrorless],
+    summary: 'APS-C body with flagship-inspired video tools.',
+    description:
+      'Horizon APS-C Body pairs a 26MP stacked sensor with fast burst shooting and 5-axis IBIS. Dual card slots and crisp EVF keep professionals confident on-set, while S-Cinetone ensures beautiful skin tones.',
+    specs: [
+      { label: 'Resolution', value: '26MP stacked sensor' },
+      { label: 'Burst', value: '12fps with AE/AF tracking' },
+      { label: 'Stabilization', value: '5-axis IBIS with Active mode' },
+      { label: 'Connectivity', value: 'Dual card + HDMI Type-A' },
+    ],
   },
   {
     id: 7,
@@ -91,8 +184,19 @@ const products = [
     category: 'Accessories',
     sensor: 'Full Frame',
     priceValue: 83800,
+    priceLabel: '₹83,800',
     createdAt: '2026-03-04T08:00:00Z',
     image: 'https://images.unsplash.com/photo-1495121605193-b116b5b09a8c?auto=format&fit=crop&w=800&q=80',
+    gallery: [...GALLERY_ASSETS.Accessories],
+    summary: 'Modular grip kit for handheld and rigged workflows.',
+    description:
+      'Prism Grip Kit adds counterbalanced handles, dedicated shutter releases, and HDMI monitoring support. Its magnesium alloy frame stays rigid but light, making long handheld takes more comfortable.',
+    specs: [
+      { label: 'Material', value: 'Magnesium alloy chassis' },
+      { label: 'Weight', value: '450g complete kit' },
+      { label: 'Compatibility', value: 'Canon EOS + mirrorless bodies' },
+      { label: 'Workflow', value: 'Left + right hand controls' },
+    ],
   },
   {
     id: 8,
@@ -101,8 +205,19 @@ const products = [
     category: 'Lenses',
     sensor: 'Full Frame',
     priceValue: 211500,
+    priceLabel: '₹2,11,500',
     createdAt: '2026-03-02T08:00:00Z',
     image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80',
+    gallery: [...GALLERY_ASSETS.Lenses],
+    summary: 'Timeless portrait prime with modern coatings and autofocus.',
+    description:
+      'Apex Prime 85 is built for character portraits and editorial cinema. Its 11-element design keeps highlights in check while the silent linear STM AF and high-precision aperture ring give you tactile control.',
+    specs: [
+      { label: 'Aperture', value: 'f/1.8' },
+      { label: 'Focal Length', value: '85mm' },
+      { label: 'Elements', value: '11 elements / 9 groups' },
+      { label: 'Autofocus', value: 'Linear STM with focus hold button' },
+    ],
   },
 ]
 
