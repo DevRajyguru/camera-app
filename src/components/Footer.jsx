@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Camera, Play, Send } from 'lucide-react'
+import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa'
 
 const Footer = () => {
   const quickLinks = [
@@ -28,38 +28,37 @@ const Footer = () => {
               </div>
               <div>
                 <p className="text-lg font-semibold text-slate-900">CameraApp</p>
-
               </div>
             </div>
-              <div className="flex gap-3">
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md"
-                  aria-label="Instagram"
-                >
-                  <Camera size={20} />
-                </a>
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md"
-                  aria-label="X"
-                >
-                  <Send size={20} />
-                </a>
-                <a
-                  href="https://youtube.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md"
-                  aria-label="YouTube"
-                >
-                  <Play size={20} />
-                </a>
-              </div>
+            <div className="flex items-center gap-3">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition duration-300 hover:bg-pink-500 hover:text-white"
+                aria-label="Instagram"
+              >
+                <FaInstagram size={18} />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition duration-300 hover:bg-blue-500 hover:text-white"
+                aria-label="Twitter"
+              >
+                <FaTwitter size={18} />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition duration-300 hover:bg-red-500 hover:text-white"
+                aria-label="YouTube"
+              >
+                <FaYoutube size={18} />
+              </a>
+            </div>
           </div>
 
           <div className="space-y-3">

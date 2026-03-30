@@ -120,7 +120,7 @@ const ProductDetailsPage = () => {
     <div className="animate-fadeIn mx-auto max-w-6xl space-y-12 py-16 px-4 sm:px-6 lg:px-0">
       <section className="grid gap-12 lg:grid-cols-2 product-details-grid">
         <div className="space-y-4 product-details-hero">
-          <div className="h-[400px] overflow-hidden rounded-2xl bg-gray-100 product-details-image">
+          <div className="w-full aspect-[4/3] overflow-hidden rounded-xl bg-gray-100">
             <img
               src={imageSrc}
               alt={product.name}
@@ -129,7 +129,7 @@ const ProductDetailsPage = () => {
                   event.currentTarget.src = fallbackImage
                 }
               }}
-              className="h-full w-full object-contain"
+              className="h-full w-full object-cover"
             />
           </div>
         </div>
