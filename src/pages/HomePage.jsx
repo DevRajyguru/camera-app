@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import ProductCard from '../components/ProductCard.jsx'
 import Button from '../components/Button.jsx'
 import dslrImage from '../assets/images/DSLR.jpg'
@@ -14,12 +15,15 @@ import {
 
 const categoryImages = {
   DSLR: dslrImage,
-  Mirrorless: mirrorlessImage,
-  Lenses: lensesImage,
-  Accessories: accessoriesImage,
+  MIRRORLESS: mirrorlessImage,
+  LENSES: lensesImage,
+  ACCESSORIES: accessoriesImage,
 }
 
-const HomePage = () => (
+const HomePage = () => {
+  const navigate = useNavigate()
+
+  return (
   <main className="bg-gray-50">
     <div className="mx-auto flex max-w-7xl flex-col space-y-20 px-4 pb-16 pt-10 md:px-8 lg:px-12">
     <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-indigo-50 via-white to-white px-6 py-20 shadow-xl">
@@ -34,9 +38,13 @@ const HomePage = () => (
             Premium gear curated for creators who crave clarity, cinematic drama, and timeless ergonomics.
             Every drop is selected for visual storytellers who demand precision.
           </p>
-          <Button className="mt-3 px-8 py-3 uppercase tracking-[0.4em]">
+          <button
+            type="button"
+            onClick={() => navigate('/products')}
+            className="btn-primary mt-3 px-8 py-3 uppercase tracking-[0.4em]"
+          >
             Explore Now
-          </Button>
+          </button>
         </div>
         <div className="relative w-full max-w-sm rounded-[32px] border border-gray-200 bg-white/90 p-6 shadow-lg">
           <p className="text-xs uppercase tracking-[0.4em] text-gray-500">Lens Labs</p>
@@ -85,8 +93,12 @@ const HomePage = () => (
       </div>
   <div className="grid gap-6 md:gap-8 md:grid-cols-2">
         {categoryTiles.map((category) => {
+          const normalizedTitle = category.title?.toUpperCase()
           const categoryImage =
-            categoryImages[category.title] || defaultCategoryImage
+            categoryImages[category.title] ||
+            categoryImages[normalizedTitle] ||
+            defaultCategoryImage
+          console.log('Category:', category.title)
 
           return (
             <article
@@ -146,6 +158,7 @@ const HomePage = () => (
     </section>
     </div>
   </main>
-)
+  )
+}
 
 export default HomePage

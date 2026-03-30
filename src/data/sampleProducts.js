@@ -1,4 +1,13 @@
-﻿export const featuredBrands = ['Canon', 'Sony', 'Nikon', 'Fujifilm']
+import summicron from '../assets/images/SummicronMirrorless.jpg'
+import edgePrime from '../assets/images/EdgePrimeLens.jpg'
+import rogueFlash from '../assets/images/rogueflash.png'
+import atlasDSLR from '../assets/images/atlasdslr.png'
+import novaLens from '../assets/images/novacinelens.png'
+import horizonBody from '../assets/images/horizonbody.png'
+import apexLens from '../assets/images/apex.png'
+import prismKit from '../assets/images/prism.png'
+
+export const featuredBrands = ['Canon', 'Sony', 'Nikon', 'Fujifilm']
 
 export const categoryTiles = [
   {
@@ -24,7 +33,8 @@ const products = [
     id: 1,
     name: 'Summicron Mirrorless',
     brand: 'Sony',
-    category: 'Mirrorless',
+    category: 'MIRRORLESS',
+    image: summicron,
     sensor: 'Full Frame',
     priceValue: 199117,
     priceLabel: '₹1,99,117',
@@ -43,7 +53,8 @@ const products = [
     id: 2,
     name: 'Edge Prime Lens',
     brand: 'Canon',
-    category: 'Lenses',
+    category: 'LENSES',
+    image: edgePrime,
     sensor: 'Full Frame',
     priceValue: 99517,
     priceLabel: '₹99,517',
@@ -62,7 +73,8 @@ const products = [
     id: 3,
     name: 'Rogue Studio Flash',
     brand: 'Nikon',
-    category: 'Accessories',
+    category: 'ACCESSORIES',
+    image: rogueFlash,
     sensor: 'APS-C',
     priceValue: 62167,
     priceLabel: '₹62,167',
@@ -82,6 +94,7 @@ const products = [
     name: 'Atlas DSLR Pro',
     brand: 'Nikon',
     category: 'DSLR',
+    image: atlasDSLR,
     sensor: 'Full Frame',
     priceValue: 145067,
     priceLabel: '₹1,45,067',
@@ -100,7 +113,8 @@ const products = [
     id: 5,
     name: 'Nova Cine Lens',
     brand: 'Fujifilm',
-    category: 'Lenses',
+    category: 'LENSES',
+    image: novaLens,
     sensor: 'APS-C',
     priceValue: 244850,
     priceLabel: '₹2,44,850',
@@ -119,7 +133,8 @@ const products = [
     id: 6,
     name: 'Horizon APS-C Body',
     brand: 'Sony',
-    category: 'Mirrorless',
+    category: 'MIRRORLESS',
+    image: horizonBody,
     sensor: 'APS-C',
     priceValue: 174500,
     priceLabel: '₹1,74,500',
@@ -138,7 +153,8 @@ const products = [
     id: 7,
     name: 'Prism Grip Kit',
     brand: 'Canon',
-    category: 'Accessories',
+    category: 'ACCESSORIES',
+    image: prismKit,
     sensor: 'Full Frame',
     priceValue: 83800,
     priceLabel: '₹83,800',
@@ -157,7 +173,8 @@ const products = [
     id: 8,
     name: 'Apex Prime 85',
     brand: 'Fujifilm',
-    category: 'Lenses',
+    category: 'LENSES',
+    image: apexLens,
     sensor: 'Full Frame',
     priceValue: 211500,
     priceLabel: '₹2,11,500',
