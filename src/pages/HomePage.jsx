@@ -1,11 +1,23 @@
 import ProductCard from '../components/ProductCard.jsx'
 import Button from '../components/Button.jsx'
+import dslrImage from '../assets/images/DSLR.jpg'
+import mirrorlessImage from '../assets/images/mirrorless.jpg'
+import lensesImage from '../assets/images/lenses.jpg'
+import accessoriesImage from '../assets/images/Accessories.jpg'
+import defaultCategoryImage from '../assets/hero.png'
 import {
   categoryTiles,
   featuredBrands,
   newLaunches,
   trendingProducts,
 } from '../data/sampleProducts.js'
+
+const categoryImages = {
+  DSLR: dslrImage,
+  Mirrorless: mirrorlessImage,
+  Lenses: lensesImage,
+  Accessories: accessoriesImage,
+}
 
 const HomePage = () => (
   <main className="bg-gray-50">
@@ -71,28 +83,37 @@ const HomePage = () => (
         <h2 className="text-xl md:text-2xl font-semibold tracking-wide text-gray-900">Shop by Category</h2>
         <p className="text-sm text-gray-500">Choose a focus and let the light follow.</p>
       </div>
-      <div className="grid gap-6 md:gap-8 md:grid-cols-2">
-        {categoryTiles.map((category) => (
-          <article
-            key={category.title}
-            className="flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
-          >
-            <div className="relative overflow-hidden">
-              <div className="h-48 w-full flex items-center justify-center bg-gray-100 rounded-xl">
-                <p className="text-sm text-gray-500">No Image</p>
+  <div className="grid gap-6 md:gap-8 md:grid-cols-2">
+        {categoryTiles.map((category) => {
+          const categoryImage =
+            categoryImages[category.title] || defaultCategoryImage
+
+          return (
+            <article
+              key={category.title}
+              className="flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+            >
+              <div className="relative">
+                <div className="h-48 w-full overflow-hidden rounded-t-2xl bg-gray-100">
+                  <img
+                    src={categoryImage}
+                    alt={category.title}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/50 to-transparent" />
-            </div>
-            <div className="space-y-3 px-6 py-6">
-              <p className="text-xs uppercase tracking-[0.5em] text-gray-500">{category.subtitle}</p>
-              <h3 className="text-3xl font-semibold text-gray-900">{category.title}</h3>
-              <Button className="w-full justify-between px-6 py-2 uppercase tracking-[0.4em]">
-                Browse
-                <span className="text-2xl leading-none">&rarr;</span>
-              </Button>
-            </div>
-          </article>
-        ))}
+              <div className="space-y-3 px-6 py-6">
+                <p className="text-xs uppercase tracking-[0.5em] text-gray-500">{category.subtitle}</p>
+                <h3 className="text-3xl font-semibold text-gray-900">{category.title}</h3>
+                <Button className="w-full justify-between px-6 py-2 uppercase tracking-[0.4em]">
+                  Browse
+                  <span className="text-2xl leading-none">&rarr;</span>
+                </Button>
+              </div>
+            </article>
+          )
+        })}
       </div>
     </section>
 
