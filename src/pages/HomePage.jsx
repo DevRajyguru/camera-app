@@ -41,7 +41,7 @@ const HomePage = () => {
           <button
             type="button"
             onClick={() => navigate('/products')}
-            className="btn-primary mt-3 px-8 py-3 uppercase tracking-[0.4em]"
+            className="btn-primary rounded-full mt-3 px-8 py-3 uppercase tracking-[0.4em] "
           >
             Explore Now
           </button>

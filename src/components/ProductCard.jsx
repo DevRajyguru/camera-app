@@ -1,8 +1,12 @@
 import { memo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useStore } from '../store/useStore.js'
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate()
+  const addToCompare = useStore((state) => state.addToCompare)
+  const compareItems = useStore((state) => state.compareItems)
+  const isInCompare = compareItems.some((item) => item.id === product.id)
   const priceLabel =
     product.priceLabel ??
     new Intl.NumberFormat('en-IN', {
@@ -16,8 +20,8 @@ const ProductCard = ({ product }) => {
       <div className="relative">
         <div className="h-48 w-full overflow-hidden rounded-t-2xl bg-gray-100">
           <img
-            src={product.image}
-            alt={product.name}
+            src={product?.image}
+            alt={product?.name}
             className="h-full w-full object-cover"
           />
         </div>
@@ -34,7 +38,7 @@ const ProductCard = ({ product }) => {
             {product.brand} • {product.sensor}
           </p>
       </div>
-      <div className="mt-auto flex items-center justify-between border-t border-gray-100 px-5 py-4">
+      <div className="mt-auto flex flex-wrap items-center justify-between border-t border-gray-100 px-5 py-4 gap-2">
         <div className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-gray-500">
           <div className="h-2 w-2 rounded-full bg-indigo-200"></div>
           Live
@@ -45,6 +49,14 @@ const ProductCard = ({ product }) => {
           onClick={() => navigate(`/products/${product.id}`)}
         >
           View
+        </button>
+        <button
+          type="button"
+          disabled={isInCompare || compareItems.length >= 4}
+          className="rounded-full border border-indigo-200 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-indigo-600 transition-all duration-300 hover:scale-105 hover:shadow-lg disabled:cursor-not-allowed disabled:text-indigo-300"
+          onClick={() => addToCompare(product)}
+        >
+          {isInCompare ? 'In Compare' : 'Add to Compare'}
         </button>
       </div>
     </article>

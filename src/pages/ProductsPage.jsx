@@ -7,19 +7,22 @@ import { productsCatalog } from '../data/sampleProducts.js'
 
 const brandOptions = ['Canon', 'Sony', 'Nikon', 'Fujifilm']
 const categoryOptions = ['DSLR', 'Mirrorless', 'Lenses', 'Accessories']
+const sensorOptions = ['Full Frame', 'APS-C']
 const sortOptions = [
   { value: 'latest', label: 'Latest' },
-  { value: 'low', label: 'Price: Low → High' },
-  { value: 'high', label: 'Price: High → Low' },
+  { value: 'price_low', label: 'Price: Low → High' },
+  { value: 'price_high', label: 'Price: High → Low' },
 ]
 
 const FilterPanel = ({
   priceRange,
-  onPriceChange,
   selectedBrands,
   selectedCategories,
+  selectedSensors,
+  onPriceChange,
   onToggleBrand,
   onToggleCategory,
+  onToggleSensor,
   onClear,
   onClose,
 }) => (
@@ -65,6 +68,26 @@ const FilterPanel = ({
           placeholder="Max ₹"
           className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none"
         />
+      </div>
+    </div>
+
+    <div className="space-y-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Sensor</p>
+      <div className="grid gap-2">
+        {sensorOptions.map((sensor) => (
+          <label
+            key={sensor}
+            className="flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-800 transition hover:border-indigo-500 hover:text-indigo-700"
+          >
+            <input
+              type="checkbox"
+              checked={selectedSensors.includes(sensor)}
+              onChange={() => onToggleSensor(sensor)}
+              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            {sensor}
+          </label>
+        ))}
       </div>
     </div>
 
@@ -116,11 +139,16 @@ const ProductsPage = () => {
   const [loading, setLoading] = useState(true)
 
   const searchQuery = useStore((state) => state.searchQuery)
+  const debouncedSearch = useStore((state) => state.debouncedSearch)
+  const setSearchQuery = useStore((state) => state.setSearchQuery)
+  const setDebouncedSearch = useStore((state) => state.setDebouncedSearch)
   const selectedBrands = useStore((state) => state.selectedBrands)
   const selectedCategories = useStore((state) => state.selectedCategories)
+  const selectedSensors = useStore((state) => state.selectedSensors)
   const priceRange = useStore((state) => state.priceRange)
   const setBrands = useStore((state) => state.setBrands)
   const setCategories = useStore((state) => state.setCategories)
+  const setSensors = useStore((state) => state.setSensors)
   const setPriceRange = useStore((state) => state.setPriceRange)
   const clearFilters = useStore((state) => state.clearFilters)
   const sortOption = useStore((state) => state.sortOption)
@@ -128,63 +156,101 @@ const ProductsPage = () => {
 
   useEffect(() => {
     setVisibleCount(6)
-  }, [searchQuery, selectedBrands, selectedCategories, priceRange.min, priceRange.max, sortOption])
+  }, [
+    debouncedSearch,
+    selectedBrands,
+    selectedCategories,
+    selectedSensors,
+    priceRange.min,
+    priceRange.max,
+    sortOption,
+  ])
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800)
     return () => clearTimeout(timer)
   }, [])
 
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 400)
+    return () => clearTimeout(timer)
+  }, [searchQuery, setDebouncedSearch])
+
   const handlePriceChange = (field, rawValue) => {
-    const value = rawValue === '' ? '' : Number(rawValue)
+    const value = rawValue === '' ? 0 : Number(rawValue)
     setPriceRange({
       ...priceRange,
       [field]: value,
     })
   }
 
-  const filteredProducts = useMemo(() => {
-    const query = (searchQuery || '').toLowerCase().trim()
-    const hasMin = priceRange.min !== ''
-    const hasMax = priceRange.max !== ''
-    const keywordMap = {
-      camera: ['mirrorless', 'dslr'],
-      cameras: ['mirrorless', 'dslr'],
-      lens: ['lenses'],
-      lenses: ['lenses'],
-    }
-    const extraKeywords = keywordMap[query] ?? []
+  const toggleBrand = (brand) => {
+    const next = selectedBrands.includes(brand)
+      ? selectedBrands.filter((item) => item !== brand)
+      : [...selectedBrands, brand]
+    setBrands(next)
+  }
 
+  const toggleCategory = (category) => {
+    const next = selectedCategories.includes(category)
+      ? selectedCategories.filter((item) => item !== category)
+      : [...selectedCategories, category]
+    setCategories(next)
+  }
+
+  const toggleSensor = (sensor) => {
+    const next = selectedSensors.includes(sensor)
+      ? selectedSensors.filter((item) => item !== sensor)
+      : [...selectedSensors, sensor]
+    setSensors(next)
+  }
+
+  const filteredProducts = useMemo(() => {
+    const query = (debouncedSearch || '').toLowerCase().trim()
     return productsCatalog.filter((product) => {
-      const productName = product.name.toLowerCase()
-      const productCategory = product.category.toLowerCase()
-      const productBrand = product.brand.toLowerCase()
+      const name = product.name?.toLowerCase() ?? ''
+      const brand = product.brand?.toLowerCase() ?? ''
+      const category = product.category?.toLowerCase() ?? ''
+      const sensor = product.sensor?.toLowerCase() ?? ''
+      const price = product.priceValue ?? 0
 
       const matchesSearch =
-        query === '' ||
-        productName.includes(query) ||
-        productCategory.includes(query) ||
-        productBrand.includes(query)
+        query === '' || name.includes(query) || brand.includes(query) || category.includes(query)
 
-      const matchesKeyword = extraKeywords.some((keyword) => productCategory.includes(keyword))
+      const matchesBrand =
+        selectedBrands.length === 0 || selectedBrands.includes(product.brand)
 
-      const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand)
       const matchesCategory =
         selectedCategories.length === 0 || selectedCategories.includes(product.category)
-      const matchesPrice =
-        (!hasMin || product.priceValue >= priceRange.min) &&
-        (!hasMax || product.priceValue <= priceRange.max)
 
-      return (matchesSearch || matchesKeyword) && matchesBrand && matchesCategory && matchesPrice
+      const matchesSensor =
+        selectedSensors.length === 0 || selectedSensors.includes(product.sensor)
+
+      const matchesPrice = price >= priceRange.min && price <= priceRange.max
+
+      return (
+        matchesSearch &&
+        matchesBrand &&
+        matchesCategory &&
+        matchesSensor &&
+        matchesPrice
+      )
     })
-  }, [searchQuery, selectedBrands, selectedCategories, priceRange.min, priceRange.max])
+  }, [
+    debouncedSearch,
+    selectedBrands,
+    selectedCategories,
+    selectedSensors,
+    priceRange.min,
+    priceRange.max,
+  ])
 
   const sortedProducts = useMemo(() => {
     const sorted = [...filteredProducts]
-    if (sortOption === 'low') {
-      sorted.sort((a, b) => a.priceValue - b.priceValue)
-    } else if (sortOption === 'high') {
-      sorted.sort((a, b) => b.priceValue - a.priceValue)
+    if (sortOption === 'price_low') {
+      sorted.sort((a, b) => (a.priceValue ?? 0) - (b.priceValue ?? 0))
+    } else if (sortOption === 'price_high') {
+      sorted.sort((a, b) => (b.priceValue ?? 0) - (a.priceValue ?? 0))
     } else {
       sorted.sort(
         (a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf(),
@@ -212,11 +278,13 @@ const ProductsPage = () => {
         <aside className="hidden w-72 shrink-0 lg:block">
           <FilterPanel
             priceRange={priceRange}
-            onPriceChange={handlePriceChange}
             selectedBrands={selectedBrands}
             selectedCategories={selectedCategories}
-            onToggleBrand={setBrands}
-            onToggleCategory={setCategories}
+            selectedSensors={selectedSensors}
+            onPriceChange={handlePriceChange}
+            onToggleBrand={toggleBrand}
+            onToggleCategory={toggleCategory}
+            onToggleSensor={toggleSensor}
             onClear={clearFilters}
           />
         </aside>
@@ -254,6 +322,16 @@ const ProductsPage = () => {
             </div>
           </div>
 
+          <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Search cameras, lenses, accessories"
+              className="w-full rounded-2xl border border-gray-200 px-4 py-2 text-sm focus:border-indigo-500 focus:outline-none"
+            />
+          </div>
+
           {loading ? (
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, index) => (
@@ -283,11 +361,13 @@ const ProductsPage = () => {
           <div className="max-h-[90vh] w-full max-w-sm overflow-auto rounded-3xl bg-white p-6 shadow-2xl">
             <FilterPanel
               priceRange={priceRange}
-              onPriceChange={handlePriceChange}
               selectedBrands={selectedBrands}
               selectedCategories={selectedCategories}
-              onToggleBrand={setBrands}
-              onToggleCategory={setCategories}
+              selectedSensors={selectedSensors}
+              onPriceChange={handlePriceChange}
+              onToggleBrand={toggleBrand}
+              onToggleCategory={toggleCategory}
+              onToggleSensor={toggleSensor}
               onClear={() => {
                 clearFilters()
                 setIsFilterModalOpen(false)

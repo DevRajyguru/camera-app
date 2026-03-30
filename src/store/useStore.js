@@ -3,10 +3,13 @@ import { create } from 'zustand'
 export const useStore = create((set) => ({
   cart: [],
   wishlist: [],
+  compareItems: [],
   searchQuery: '',
+  debouncedSearch: '',
   selectedBrands: [],
   selectedCategories: [],
-  priceRange: { min: '', max: '' },
+  selectedSensors: [],
+  priceRange: { min: 0, max: 200000 },
   sortOption: 'latest',
 
   addToCart: (product) =>
@@ -66,19 +69,25 @@ export const useStore = create((set) => ({
       searchQuery: query,
     }),
 
-  setBrands: (brand) =>
-    set((state) => ({
-      selectedBrands: state.selectedBrands.includes(brand)
-        ? state.selectedBrands.filter((item) => item !== brand)
-        : [...state.selectedBrands, brand],
-    })),
+  setDebouncedSearch: (query) =>
+    set({
+      debouncedSearch: query,
+    }),
 
-  setCategories: (category) =>
-    set((state) => ({
-      selectedCategories: state.selectedCategories.includes(category)
-        ? state.selectedCategories.filter((item) => item !== category)
-        : [...state.selectedCategories, category],
-    })),
+  setBrands: (brands) =>
+    set({
+      selectedBrands: brands,
+    }),
+
+  setCategories: (categories) =>
+    set({
+      selectedCategories: categories,
+    }),
+
+  setSensors: (sensors) =>
+    set({
+      selectedSensors: sensors,
+    }),
 
   setPriceRange: (range) =>
     set(() => ({
@@ -90,10 +99,37 @@ export const useStore = create((set) => ({
       sortOption: option,
     })),
 
+  addToCompare: (product) =>
+    set((state) => {
+      if (!product || !product.id) {
+        return state
+      }
+      if (state.compareItems.some((item) => item.id === product.id)) {
+        return state
+      }
+      if (state.compareItems.length >= 4) {
+        return state
+      }
+      return {
+        compareItems: [...state.compareItems, product],
+      }
+    }),
+
+  removeFromCompare: (id) =>
+    set((state) => ({
+      compareItems: state.compareItems.filter((item) => item.id !== id),
+    })),
+
+  clearCompare: () =>
+    set({
+      compareItems: [],
+    }),
+
   clearFilters: () =>
     set({
       selectedBrands: [],
       selectedCategories: [],
-      priceRange: { min: '', max: '' },
+      selectedSensors: [],
+      priceRange: { min: 0, max: 200000 },
     }),
 }))
