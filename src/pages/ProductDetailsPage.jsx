@@ -40,6 +40,7 @@ const ProductDetailsPage = () => {
   const { id } = useParams()
   const productId = Number(id)
   const product = productsCatalog.find((item) => item.id === productId)
+  const fallbackImage = productsCatalog[0]?.image ?? ''
   const [activeTab, setActiveTab] = useState('specs')
   const [loading, setLoading] = useState(true)
   const addToCart = useStore((state) => state.addToCart)
@@ -113,12 +114,23 @@ const ProductDetailsPage = () => {
     )
   }
 
+  const imageSrc = product?.image ?? fallbackImage
+
   return (
     <div className="animate-fadeIn mx-auto max-w-6xl space-y-12 py-16 px-4 sm:px-6 lg:px-0">
       <section className="grid gap-12 lg:grid-cols-2">
         <div className="space-y-4">
-          <div className="flex items-center justify-center h-[400px] rounded-2xl bg-gray-100">
-            <p className="text-gray-500 text-sm">Image unavailable</p>
+          <div className="h-[400px] overflow-hidden rounded-2xl bg-gray-100">
+            <img
+              src={imageSrc}
+              alt={product.name}
+              onError={(event) => {
+                if (event.currentTarget.src !== fallbackImage) {
+                  event.currentTarget.src = fallbackImage
+                }
+              }}
+              className="h-full w-full object-cover"
+            />
           </div>
         </div>
         <div className="space-y-6 rounded-2xl bg-white/70 p-6 shadow-lg backdrop-blur-md">
