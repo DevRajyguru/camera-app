@@ -1,0 +1,133 @@
+import { Link } from 'react-router-dom'
+import { Camera, Play, Send } from 'lucide-react'
+
+const Footer = () => {
+  const quickLinks = [
+    { label: 'Home', to: '/' },
+    { label: 'Products', to: '/products' },
+    { label: 'Compare', to: '/compare' },
+    { label: 'Wishlist', to: '/wishlist' },
+  ]
+
+  const categories = ['DSLR', 'Mirrorless', 'Lenses', 'Accessories']
+  const supportLinks = [
+    { label: 'About Us', to: '/about' },
+    { label: 'Contact', to: '/contact' },
+    { label: 'Privacy Policy', to: '/privacy' },
+    { label: 'Terms & Conditions', to: '/terms' },
+  ]
+
+  return (
+    <footer className="bg-[#f8f9fb] border-t border-gray-200 py-10 text-slate-600">
+      <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6 sm:px-10 lg:px-0">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600">
+                <span className="text-lg font-black">CA</span>
+              </div>
+              <div>
+                <p className="text-lg font-semibold text-slate-900">CameraApp</p>
+
+              </div>
+            </div>
+              <div className="flex gap-3">
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md"
+                  aria-label="Instagram"
+                >
+                  <Camera size={20} />
+                </a>
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md"
+                  aria-label="X"
+                >
+                  <Send size={20} />
+                </a>
+                <a
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md"
+                  aria-label="YouTube"
+                >
+                  <Play size={20} />
+                </a>
+              </div>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-slate-400">Quick links</p>
+            <div className="space-y-2 text-sm text-gray-600">
+              {quickLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  className="block rounded-xl px-2 py-1 transition hover:text-indigo-600"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-slate-400">Categories</p>
+            <div className="space-y-2 text-sm text-gray-600">
+              {categories.map((category) => (
+                <Link
+                  key={category}
+                  to="/products"
+                  className="block rounded-xl px-2 py-1 transition hover:text-indigo-600"
+                >
+                  {category}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-slate-400">Support</p>
+            <div className="space-y-2 text-sm text-gray-600">
+              {supportLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  className="block rounded-xl px-2 py-1 transition hover:text-indigo-600"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-gray-500">Subscribe for new drops</p>
+              <div className="flex flex-col gap-2">
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                />
+                <button className="w-full rounded-2xl bg-indigo-600 px-4 py-2 mb-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
+                  Subscribe
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="border-t border-slate-200 bg-white/60 py-4">
+        <p className="text-center text-xs uppercase tracking-[0.3em] text-slate-400">
+          © 2026 Camera App. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  )
+}
+
+export default Footer

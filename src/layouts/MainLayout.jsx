@@ -1,6 +1,7 @@
 import Navbar from '../components/Navbar.jsx'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
+import Footer from '../components/Footer.jsx'
 
 const MainLayout = ({ children }) => {
   const navigate = useNavigate()
@@ -13,6 +14,7 @@ const MainLayout = ({ children }) => {
         <main className="mx-auto flex max-w-7xl flex-col px-4 py-10 sm:px-6 lg:px-8">
           {children}
         </main>
+        <Footer />
         {compareItems.length > 0 && (
           <button
             type="button"

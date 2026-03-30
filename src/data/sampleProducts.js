@@ -7,7 +7,7 @@ import horizonBody from '../assets/images/horizonbody.png'
 import apexLens from '../assets/images/apex.png'
 import prismKit from '../assets/images/prism.png'
 
-export const featuredBrands = ['Canon', 'Sony', 'Nikon', 'Fujifilm']
+export const featuredBrands = ['CANON', 'SONY', 'NIKON', 'FUJIFILM']
 
 export const categoryTiles = [
   {
