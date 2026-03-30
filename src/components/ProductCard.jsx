@@ -12,9 +12,9 @@ const ProductCard = ({ product }) => {
     }).format(product.priceValue ?? 0)
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative">
-        <div className="h-40 bg-gray-100 flex items-center justify-center rounded-t-2xl">
+<article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:scale-[1.03] hover:shadow-xl cursor-pointer">
+      <div className="relative overflow-hidden rounded-t-2xl">
+        <div className="h-40 bg-gray-100 flex items-center justify-center transition duration-500 group-hover:scale-110">
           <p className="text-xs text-gray-400">No Image</p>
         </div>
         <span className="absolute inset-x-0 bottom-3 mx-auto w-max rounded-full bg-black/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-white shadow-lg">

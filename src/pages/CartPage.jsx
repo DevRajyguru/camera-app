@@ -1,26 +1,52 @@
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "../store/useStore.js"
+import toast from "react-hot-toast"
 
 const CartPage = () => {
   const cart = useStore((state) => state.cart)
   const removeFromCart = useStore((state) => state.removeFromCart)
+  const increaseQuantity = useStore((state) => state.increaseQuantity)
+  const decreaseQuantity = useStore((state) => state.decreaseQuantity)
   const navigate = useNavigate()
+  const [loadingCart, setLoadingCart] = useState(true)
 
-  const total = cart.reduce((sum, item) => sum + (item.priceValue ?? 0), 0)
+  useEffect(() => {
+    const timer = setTimeout(() => setLoadingCart(false), 600)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const total = cart.reduce(
+    (sum, item) => sum + (item.priceValue ?? 0) * (item.quantity || 1),
+    0,
+  )
+
+  if (loadingCart) {
+    return (
+      <div className="animate-fadeIn max-w-6xl mx-auto px-4 py-16 text-center text-gray-500">
+        Loading cart...
+      </div>
+    )
+  }
 
   if (cart.length === 0) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-16 text-center">
-        <div className="text-center py-20">
-          <h2 className="text-xl font-semibold">Your cart is empty</h2>
-          <p className="text-gray-500 mt-2">Start adding products to see them here</p>
-        </div>
+      <div className="animate-fadeIn max-w-3xl mx-auto px-4 py-20 text-center">
+        <h2 className="text-2xl font-semibold mb-2">Your cart is empty 🛒</h2>
+        <p className="text-gray-500 mb-4">Looks like you haven’t added anything yet.</p>
+        <button
+          type="button"
+          onClick={() => navigate('/products')}
+          className="btn-primary"
+        >
+          Browse Products
+        </button>
       </div>
     )
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-3 gap-10">
+    <div className="animate-fadeIn max-w-6xl mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-3 gap-10">
       {/* LEFT - CART ITEMS */}
       <div className="lg:col-span-2 space-y-6">
         <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>
@@ -38,16 +64,31 @@ const CartPage = () => {
                 <h2 className="font-semibold text-black">{item.name}</h2>
                 <p className="text-sm text-gray-500 mt-1">₹{item.priceValue ?? 0}</p>
                 <div className="flex items-center gap-2 mt-2">
-                  <button className="px-2 py-1 border rounded">-</button>
-                  <span className="text-sm font-medium">1</span>
-                  <button className="px-2 py-1 border rounded">+</button>
+                  <button
+                    type="button"
+                    onClick={() => decreaseQuantity(item.id)}
+                    className="w-8 h-8 border rounded-lg hover:bg-gray-100"
+                  >
+                    -
+                  </button>
+                  <span className="text-sm font-medium">{item.quantity || 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => increaseQuantity(item.id)}
+                    className="w-8 h-8 border rounded-lg hover:bg-gray-100"
+                  >
+                    +
+                  </button>
                 </div>
               </div>
             </div>
 
             <button
               type="button"
-              onClick={() => removeFromCart(item.id)}
+              onClick={() => {
+                removeFromCart(item.id)
+                toast.error("Removed from cart ❌")
+              }}
               className="text-red-500 hover:text-red-600 text-sm font-medium"
             >
               ✕

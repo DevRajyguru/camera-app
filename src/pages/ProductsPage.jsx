@@ -1,27 +1,26 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import Button from '../components/Button.jsx'
 import ProductCard from '../components/ProductCard.jsx'
+import SkeletonCard from '../components/SkeletonCard.jsx'
+import { useStore } from '../store/useStore.js'
 import { productsCatalog } from '../data/sampleProducts.js'
 
 const brandOptions = ['Canon', 'Sony', 'Nikon', 'Fujifilm']
 const categoryOptions = ['DSLR', 'Mirrorless', 'Lenses', 'Accessories']
-const sensorOptions = ['Full Frame', 'APS-C']
 const sortOptions = [
   { value: 'latest', label: 'Latest' },
-  { value: 'price_low', label: 'Price: Low → High' },
-  { value: 'price_high', label: 'Price: High → Low' },
+  { value: 'low', label: 'Price: Low → High' },
+  { value: 'high', label: 'Price: High → Low' },
 ]
 
 const FilterPanel = ({
-  priceMin,
-  priceMax,
+  priceRange,
   onPriceChange,
-  activeBrands,
-  activeCategories,
-  activeSensors,
-  onToggle,
-  onReset,
+  selectedBrands,
+  selectedCategories,
+  onToggleBrand,
+  onToggleCategory,
+  onClear,
   onClose,
 }) => (
   <div className="flex flex-col gap-6 rounded-3xl border border-gray-200 bg-white p-6 shadow-lg">
@@ -30,16 +29,16 @@ const FilterPanel = ({
       <div className="flex items-center gap-2">
         <button
           type="button"
+          onClick={onClear}
           className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-400 transition hover:text-gray-700"
-          onClick={onReset}
         >
           Clear
         </button>
         {onClose && (
           <button
             type="button"
+            onClick={onClose}
             className="rounded-full border border-gray-200 px-2 py-1 text-xs font-semibold text-gray-700"
-            onClick={() => onClose()}
           >
             Close
           </button>
@@ -47,30 +46,30 @@ const FilterPanel = ({
       </div>
     </div>
 
-          <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Price range</p>
-            <div className="flex gap-2">
+    <div className="space-y-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Price range</p>
+      <div className="flex gap-2">
         <input
           type="number"
           min="0"
-          value={priceMin}
-          onChange={(event) => onPriceChange('priceMin', event.target.value)}
+          value={priceRange.min}
+          onChange={(event) => onPriceChange('min', event.target.value)}
           placeholder="Min ₹"
           className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none"
         />
         <input
           type="number"
           min="0"
-          value={priceMax}
-          onChange={(event) => onPriceChange('priceMax', event.target.value)}
+          value={priceRange.max}
+          onChange={(event) => onPriceChange('max', event.target.value)}
           placeholder="Max ₹"
           className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none"
         />
       </div>
     </div>
 
-      <div className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Brands</p>
+    <div className="space-y-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Brands</p>
       <div className="grid gap-2">
         {brandOptions.map((brand) => (
           <label
@@ -79,8 +78,8 @@ const FilterPanel = ({
           >
             <input
               type="checkbox"
-              checked={activeBrands.includes(brand)}
-              onChange={() => onToggle('brand', brand)}
+              checked={selectedBrands.includes(brand)}
+              onChange={() => onToggleBrand(brand)}
               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             {brand}
@@ -89,8 +88,8 @@ const FilterPanel = ({
       </div>
     </div>
 
-      <div className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Category</p>
+    <div className="space-y-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Category</p>
       <div className="grid gap-2">
         {categoryOptions.map((category) => (
           <label
@@ -99,31 +98,11 @@ const FilterPanel = ({
           >
             <input
               type="checkbox"
-              checked={activeCategories.includes(category)}
-              onChange={() => onToggle('category', category)}
+              checked={selectedCategories.includes(category)}
+              onChange={() => onToggleCategory(category)}
               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             {category}
-          </label>
-        ))}
-      </div>
-    </div>
-
-      <div className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-800">Sensor type</p>
-      <div className="grid gap-2">
-        {sensorOptions.map((sensor) => (
-          <label
-            key={sensor}
-            className="flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-800 transition hover:border-indigo-500 hover:text-indigo-700"
-          >
-            <input
-              type="checkbox"
-              checked={activeSensors.includes(sensor)}
-              onChange={() => onToggle('sensor', sensor)}
-              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-            />
-            {sensor}
           </label>
         ))}
       </div>
@@ -134,70 +113,77 @@ const FilterPanel = ({
 const ProductsPage = () => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [visibleCount, setVisibleCount] = useState(6)
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [loading, setLoading] = useState(true)
 
-  const priceMin = searchParams.get('priceMin') ?? ''
-  const priceMax = searchParams.get('priceMax') ?? ''
-  const activeBrands = searchParams.getAll('brand')
-  const activeCategories = searchParams.getAll('category')
-  const activeSensors = searchParams.getAll('sensor')
-  const sort = searchParams.get('sort') ?? 'latest'
+  const searchQuery = useStore((state) => state.searchQuery)
+  const selectedBrands = useStore((state) => state.selectedBrands)
+  const selectedCategories = useStore((state) => state.selectedCategories)
+  const priceRange = useStore((state) => state.priceRange)
+  const setBrands = useStore((state) => state.setBrands)
+  const setCategories = useStore((state) => state.setCategories)
+  const setPriceRange = useStore((state) => state.setPriceRange)
+  const clearFilters = useStore((state) => state.clearFilters)
+  const sortOption = useStore((state) => state.sortOption)
+  const setSortOption = useStore((state) => state.setSortOption)
 
   useEffect(() => {
     setVisibleCount(6)
-  }, [searchParams.toString()])
+  }, [searchQuery, selectedBrands, selectedCategories, priceRange.min, priceRange.max, sortOption])
 
-  const handlePriceChange = (key, raw) => {
-    const cleaned = raw.replace(/\D/g, '')
-    const params = new URLSearchParams(searchParams)
-    if (cleaned) {
-      params.set(key, cleaned)
-    } else {
-      params.delete(key)
-    }
-    setSearchParams(params)
-  }
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800)
+    return () => clearTimeout(timer)
+  }, [])
 
-  const toggleMultiFilter = (key, value) => {
-    const params = new URLSearchParams(searchParams)
-    const existing = params.getAll(key)
-    if (existing.includes(value)) {
-      const remaining = existing.filter((item) => item !== value)
-      params.delete(key)
-      remaining.forEach((item) => params.append(key, item))
-    } else {
-      params.append(key, value)
-    }
-    setSearchParams(params)
-  }
-
-  const handleSortChange = (event) => {
-    const params = new URLSearchParams(searchParams)
-    params.set('sort', event.target.value)
-    setSearchParams(params)
-  }
-
-  const handleResetFilters = () => {
-    setSearchParams({})
+  const handlePriceChange = (field, rawValue) => {
+    const value = rawValue === '' ? '' : Number(rawValue)
+    setPriceRange({
+      ...priceRange,
+      [field]: value,
+    })
   }
 
   const filteredProducts = useMemo(() => {
-    const minValue = Number(priceMin) || 0
-    const maxValue = priceMax ? Number(priceMax) : Infinity
+    const query = (searchQuery || '').toLowerCase().trim()
+    const hasMin = priceRange.min !== ''
+    const hasMax = priceRange.max !== ''
+    const keywordMap = {
+      camera: ['mirrorless', 'dslr'],
+      cameras: ['mirrorless', 'dslr'],
+      lens: ['lenses'],
+      lenses: ['lenses'],
+    }
+    const extraKeywords = keywordMap[query] ?? []
+
     return productsCatalog.filter((product) => {
-      const matchesPrice = product.priceValue >= minValue && product.priceValue <= maxValue
-      const matchesBrand = activeBrands.length === 0 || activeBrands.includes(product.brand)
-      const matchesCategory = activeCategories.length === 0 || activeCategories.includes(product.category)
-      const matchesSensor = activeSensors.length === 0 || activeSensors.includes(product.sensor)
-      return matchesPrice && matchesBrand && matchesCategory && matchesSensor
+      const productName = product.name.toLowerCase()
+      const productCategory = product.category.toLowerCase()
+      const productBrand = product.brand.toLowerCase()
+
+      const matchesSearch =
+        query === '' ||
+        productName.includes(query) ||
+        productCategory.includes(query) ||
+        productBrand.includes(query)
+
+      const matchesKeyword = extraKeywords.some((keyword) => productCategory.includes(keyword))
+
+      const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand)
+      const matchesCategory =
+        selectedCategories.length === 0 || selectedCategories.includes(product.category)
+      const matchesPrice =
+        (!hasMin || product.priceValue >= priceRange.min) &&
+        (!hasMax || product.priceValue <= priceRange.max)
+
+      return (matchesSearch || matchesKeyword) && matchesBrand && matchesCategory && matchesPrice
     })
-  }, [activeBrands, activeCategories, activeSensors, priceMax, priceMin])
+  }, [searchQuery, selectedBrands, selectedCategories, priceRange.min, priceRange.max])
 
   const sortedProducts = useMemo(() => {
     const sorted = [...filteredProducts]
-    if (sort === 'price_low') {
+    if (sortOption === 'low') {
       sorted.sort((a, b) => a.priceValue - b.priceValue)
-    } else if (sort === 'price_high') {
+    } else if (sortOption === 'high') {
       sorted.sort((a, b) => b.priceValue - a.priceValue)
     } else {
       sorted.sort(
@@ -205,23 +191,33 @@ const ProductsPage = () => {
       )
     }
     return sorted
-  }, [filteredProducts, sort])
+  }, [filteredProducts, sortOption])
 
   const visibleProducts = sortedProducts.slice(0, visibleCount)
 
+  if (!loading && filteredProducts.length === 0) {
+    return (
+      <main className="animate-fadeIn min-h-screen bg-gray-50">
+        <div className="mx-auto max-w-3xl px-4 py-20 text-center">
+          <h2 className="text-xl font-semibold mb-2">No products found 😕</h2>
+          <p className="text-gray-500">Try adjusting your filters or search.</p>
+        </div>
+      </main>
+    )
+  }
+
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="animate-fadeIn min-h-screen bg-gray-50">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 md:px-6 lg:flex-row lg:gap-10">
         <aside className="hidden w-72 shrink-0 lg:block">
           <FilterPanel
-            priceMin={priceMin}
-            priceMax={priceMax}
+            priceRange={priceRange}
             onPriceChange={handlePriceChange}
-            activeBrands={activeBrands}
-            activeCategories={activeCategories}
-            activeSensors={activeSensors}
-            onToggle={toggleMultiFilter}
-            onReset={handleResetFilters}
+            selectedBrands={selectedBrands}
+            selectedCategories={selectedCategories}
+            onToggleBrand={setBrands}
+            onToggleCategory={setCategories}
+            onClear={clearFilters}
           />
         </aside>
 
@@ -234,16 +230,19 @@ const ProductsPage = () => {
               </span>
             </div>
             <div className="flex items-center gap-3">
-            <Button className="lg:hidden border border-gray-200 bg-white/80 text-gray-700 hover:text-white hover:bg-indigo-500">
-              <span className="-ml-0.5 text-lg leading-none">+</span>
-              <span className="ml-2 text-xs uppercase tracking-[0.3em] text-gray-700">Filters</span>
-            </Button>
+              <Button
+                className="lg:hidden border border-gray-200 bg-white/80 text-gray-700 hover:text-white hover:bg-indigo-500"
+                onClick={() => setIsFilterModalOpen(true)}
+              >
+                <span className="-ml-0.5 text-lg leading-none">+</span>
+                <span className="ml-2 text-xs uppercase tracking-[0.3em] text-gray-700">Filters</span>
+              </Button>
               <label className="hidden text-xs uppercase tracking-[0.4em] text-gray-400 lg:block">
                 Sort
               </label>
               <select
-                value={sort}
-                onChange={handleSortChange}
+                value={sortOption}
+                onChange={(event) => setSortOption(event.target.value)}
                 className="mr-4 rounded-2xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 focus:border-indigo-500 focus:outline-none"
               >
                 {sortOptions.map((option) => (
@@ -255,23 +254,26 @@ const ProductsPage = () => {
             </div>
           </div>
 
-          <div className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {visibleProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-            {visibleProducts.length === 0 && (
-              <div className="col-span-full rounded-3xl border border-dashed border-gray-300 bg-white/70 p-8 text-center text-gray-500">
-                No products match the selected filters.
-              </div>
-            )}
-          </div>
+          {loading ? (
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {visibleProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
 
-          {visibleCount < sortedProducts.length && (
-          <div className="flex justify-center">
-            <Button className="px-6 py-3 uppercase tracking-[0.4em]" onClick={() => setVisibleCount((prev) => prev + 6)}>
-              Load more
-            </Button>
-          </div>
+          {!loading && visibleCount < sortedProducts.length && (
+            <div className="flex justify-center">
+              <Button className="px-6 py-3 uppercase tracking-[0.4em]" onClick={() => setVisibleCount((prev) => prev + 6)}>
+                Load more
+              </Button>
+            </div>
           )}
         </section>
       </div>
@@ -280,15 +282,14 @@ const ProductsPage = () => {
         <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 px-4 py-6">
           <div className="max-h-[90vh] w-full max-w-sm overflow-auto rounded-3xl bg-white p-6 shadow-2xl">
             <FilterPanel
-              priceMin={priceMin}
-              priceMax={priceMax}
+              priceRange={priceRange}
               onPriceChange={handlePriceChange}
-              activeBrands={activeBrands}
-              activeCategories={activeCategories}
-              activeSensors={activeSensors}
-              onToggle={toggleMultiFilter}
-              onReset={() => {
-                handleResetFilters()
+              selectedBrands={selectedBrands}
+              selectedCategories={selectedCategories}
+              onToggleBrand={setBrands}
+              onToggleCategory={setCategories}
+              onClear={() => {
+                clearFilters()
                 setIsFilterModalOpen(false)
               }}
               onClose={() => setIsFilterModalOpen(false)}

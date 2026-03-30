@@ -1,9 +1,11 @@
-import { memo, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard.jsx'
+import SkeletonCard from '../components/SkeletonCard.jsx'
 import Button from '../components/Button.jsx'
 import { productsCatalog } from '../data/sampleProducts.js'
 import { useStore } from '../store/useStore.js'
+import toast from 'react-hot-toast'
 
 const currencyFormatter = new Intl.NumberFormat('en-IN', {
   style: 'currency',
@@ -37,11 +39,19 @@ SimilarProductsList.displayName = 'SimilarProductsList'
 const ProductDetailsPage = () => {
   const { id } = useParams()
   const productId = Number(id)
+  const product = productsCatalog.find((item) => item.id === productId)
   const [activeTab, setActiveTab] = useState('specs')
+  const [loading, setLoading] = useState(true)
   const addToCart = useStore((state) => state.addToCart)
   const addToWishlist = useStore((state) => state.addToWishlist)
+  const wishlist = useStore((state) => state.wishlist)
+  const isInWishlist = Boolean(product && wishlist.some((item) => item.id === product.id))
 
-  const product = productsCatalog.find((item) => item.id === productId)
+  useEffect(() => {
+    setLoading(true)
+    const timer = setTimeout(() => setLoading(false), 700)
+    return () => clearTimeout(timer)
+  }, [productId])
 
   const formattedPrice = useMemo(() => {
     if (!product) {
@@ -85,7 +95,15 @@ const ProductDetailsPage = () => {
     return productsCatalog
       .filter((item) => item.category === product.category && item.id !== product.id)
       .slice(0, 4)
-  }, [productId])
+  }, [product])
+
+  if (loading) {
+    return (
+      <div className="animate-fadeIn mx-auto max-w-6xl px-4 py-16">
+        <SkeletonCard />
+      </div>
+    )
+  }
 
   if (!product) {
     return (
@@ -96,7 +114,7 @@ const ProductDetailsPage = () => {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-12 py-16 px-4 sm:px-6 lg:px-0">
+    <div className="animate-fadeIn mx-auto max-w-6xl space-y-12 py-16 px-4 sm:px-6 lg:px-0">
       <section className="grid gap-12 lg:grid-cols-2">
         <div className="space-y-4">
           <div className="flex items-center justify-center h-[400px] rounded-2xl bg-gray-100">
@@ -134,16 +152,30 @@ const ProductDetailsPage = () => {
           <div className="flex gap-3">
             <Button
               className="h-12 px-6 shadow-md"
-              onClick={() => addToCart(product)}
+              onClick={() => {
+                if (!product) return
+                addToCart(product)
+                toast.success('Added to cart 🛒')
+              }}
             >
               Add to Cart
             </Button>
             <Button
-              variant="ghost"
-              className="h-12 px-6 shadow-md text-indigo-600"
-              onClick={() => addToWishlist(product)}
+              className={`h-12 px-6 shadow-md rounded-2xl transition ${
+                isInWishlist
+                  ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                  : 'text-indigo-600 border border-indigo-200 hover:bg-indigo-50'
+              }`}
+              onClick={() => {
+                if (!product || isInWishlist) {
+                  return
+                }
+                addToWishlist(product)
+                toast.success('Added to wishlist ❤️')
+              }}
+              disabled={isInWishlist}
             >
-              Add to Wishlist
+              {isInWishlist ? '❤️ In Wishlist' : 'Add to Wishlist'}
             </Button>
           </div>
         </div>

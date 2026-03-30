@@ -1,9 +1,12 @@
-﻿import { Link } from 'react-router-dom'
-import { useStore } from '../store/useStore.js'
+import { Link, useNavigate } from "react-router-dom"
+import { useStore } from "../store/useStore.js"
 
 const Navbar = () => {
+  const navigate = useNavigate()
   const cart = useStore((state) => state.cart)
   const wishlist = useStore((state) => state.wishlist)
+  const searchQuery = useStore((state) => state.searchQuery)
+  const setSearchQuery = useStore((state) => state.setSearchQuery)
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 py-3 shadow-sm shadow-slate-900/10 backdrop-blur-md">
@@ -20,7 +23,11 @@ const Navbar = () => {
               Search camera gear
             </label>
             <div className="relative">
-              <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-slate-400">
+              <button
+                type="button"
+                onClick={() => navigate("/products")}
+                className="absolute inset-y-0 left-4 flex items-center text-slate-400 transition hover:text-slate-600"
+              >
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
@@ -32,11 +39,20 @@ const Navbar = () => {
                   <circle cx="11" cy="11" r="7" />
                   <line x1="16.5" x2="22" y1="16.5" y2="22" />
                 </svg>
-              </span>
+              </button>
               <input
                 id="site-search"
                 type="search"
                 placeholder="Search cameras, lenses, accessories"
+                value={searchQuery}
+                onChange={(event) => {
+                  setSearchQuery(event.target.value)
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    navigate("/products")
+                  }
+                }}
                 className="w-full rounded-full border border-slate-200 bg-white px-4 py-2.5 pl-11 text-sm text-slate-700 shadow-sm transition focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-100"
               />
             </div>
@@ -57,8 +73,9 @@ const Navbar = () => {
               )}
             </div>
           </Link>
-          <Link
-            to="/wishlist"
+          <button
+            type="button"
+            onClick={() => navigate('/wishlist')}
             className="relative rounded-full border border-slate-200 p-2 text-slate-600 transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
             aria-label="Wishlist"
           >
@@ -70,7 +87,7 @@ const Navbar = () => {
                 </span>
               )}
             </div>
-          </Link>
+          </button>
           <button
             type="button"
             className="rounded-full border border-slate-200 p-2 text-slate-600 transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"

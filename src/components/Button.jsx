@@ -4,9 +4,11 @@ const VARIANTS = {
   ghost: 'bg-white/90 text-indigo-600 border border-indigo-100 shadow-sm shadow-slate-200 hover:shadow-lg',
 }
 
+const BUTTON_RADIUS = 'rounded-[18px]'
+
 const Button = ({ className = '', children, variant = 'primary', ...props }) => (
   <button
-    className={`inline-flex cursor-pointer items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 ${VARIANTS[variant] ?? VARIANTS.primary} ${className}`}
+    className={`inline-flex cursor-pointer items-center justify-center ${BUTTON_RADIUS} px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 active:scale-95 ${VARIANTS[variant] ?? VARIANTS.primary} ${className}`}
     {...props}
   >
     {children}

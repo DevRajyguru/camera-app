@@ -6,6 +6,7 @@ import ProductsPage from '../pages/ProductsPage.jsx'
 import WishlistPage from '../pages/WishlistPage.jsx'
 import CartPage from '../pages/CartPage.jsx'
 import CheckoutPage from '../pages/CheckoutPage.jsx'
+import OrderSuccessPage from '../pages/OrderSuccessPage.jsx'
 
 const AppRoutes = () => (
   <Routes>
@@ -14,6 +15,7 @@ const AppRoutes = () => (
     <Route path="/products/:id" element={<ProductDetailsPage />} />
     <Route path="/cart" element={<CartPage />} />
     <Route path="/checkout" element={<CheckoutPage />} />
+    <Route path="/order-success" element={<OrderSuccessPage />} />
     <Route path="/compare" element={<ComparePage />} />
     <Route path="/wishlist" element={<WishlistPage />} />
   </Routes>
