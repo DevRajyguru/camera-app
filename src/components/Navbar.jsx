@@ -7,6 +7,13 @@ const Navbar = () => {
   const wishlist = useStore((state) => state.wishlist)
   const searchQuery = useStore((state) => state.searchQuery)
   const setSearchQuery = useStore((state) => state.setSearchQuery)
+  const resetFilters = useStore((state) => state.resetFilters)
+
+  const handleHomeSearch = (value = searchQuery) => {
+    resetFilters()
+    setSearchQuery(value)
+    navigate("/products")
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 py-3 shadow-sm shadow-slate-900/10 backdrop-blur-md">
@@ -14,6 +21,7 @@ const Navbar = () => {
         <Link
           to="/"
           className="text-lg font-semibold tracking-wide text-slate-900 transition hover:text-slate-700"
+          onClick={() => resetFilters()}
         >
           CameraApp
         </Link>
@@ -25,7 +33,7 @@ const Navbar = () => {
             <div className="relative">
               <button
                 type="button"
-                onClick={() => navigate("/products")}
+                onClick={() => handleHomeSearch(searchQuery)}
                 className="absolute inset-y-0 left-4 flex items-center text-slate-400 transition hover:text-slate-600"
               >
                 <svg
@@ -50,7 +58,7 @@ const Navbar = () => {
                 }}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
-                    navigate("/products")
+                    handleHomeSearch(searchQuery)
                   }
                 }}
                 className="w-full rounded-full border border-slate-200 bg-white px-4 py-2.5 pl-11 text-sm text-slate-700 shadow-sm transition focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-100"

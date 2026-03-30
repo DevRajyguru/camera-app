@@ -290,7 +290,7 @@ const ProductsPage = () => {
     return (
       <main className="animate-fadeIn min-h-screen bg-gray-50">
         <div className="mx-auto max-w-3xl px-4 py-20 text-center">
-          <h2 className="text-xl font-semibold mb-2">No products found 😕</h2>
+          <h2 className="text-xl font-semibold mb-2">No products found</h2>
           <p className="text-gray-500">Try adjusting your filters or search.</p>
         </div>
       </main>

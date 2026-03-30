@@ -132,4 +132,12 @@ export const useStore = create((set) => ({
       selectedSensors: [],
       priceRange: { min: 0, max: 200000 },
     }),
+
+  resetFilters: () =>
+    set({
+      selectedBrands: [],
+      selectedCategories: [],
+      selectedSensors: [],
+      priceRange: { min: 0, max: 200000 },
+    }),
 }))
