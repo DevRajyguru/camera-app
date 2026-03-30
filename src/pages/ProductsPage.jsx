@@ -15,17 +15,21 @@ const sortOptions = [
 ]
 
 const FilterPanel = ({
-  priceRange,
+  tempMin,
+  tempMax,
+  onTempMinChange,
+  onTempMaxChange,
+  onApplyPrice,
   selectedBrands,
   selectedCategories,
   selectedSensors,
-  onPriceChange,
   onToggleBrand,
   onToggleCategory,
   onToggleSensor,
   onClear,
   onClose,
-}) => (
+}) => {
+  return (
   <div className="flex flex-col gap-6 rounded-3xl border border-gray-200 bg-white p-6 shadow-lg">
     <div className="flex items-center justify-between">
       <h3 className="text-sm font-semibold uppercase tracking-[0.4em] text-gray-500">Filters</h3>
@@ -55,20 +59,27 @@ const FilterPanel = ({
         <input
           type="number"
           min="0"
-          value={priceRange.min}
-          onChange={(event) => onPriceChange('min', event.target.value)}
+          value={tempMin}
+          onChange={(event) => onTempMinChange(event.target.value)}
           placeholder="Min ₹"
           className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none"
         />
         <input
           type="number"
           min="0"
-          value={priceRange.max}
-          onChange={(event) => onPriceChange('max', event.target.value)}
+          value={tempMax}
+          onChange={(event) => onTempMaxChange(event.target.value)}
           placeholder="Max ₹"
           className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none"
         />
       </div>
+      <button
+        type="button"
+        onClick={onApplyPrice}
+        className="w-full rounded-xl border border-blue-500 bg-blue-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-blue-600 transition hover:bg-blue-500/20"
+      >
+        Apply
+      </button>
     </div>
 
     <div className="space-y-3">
@@ -131,7 +142,8 @@ const FilterPanel = ({
       </div>
     </div>
   </div>
-)
+  )
+}
 
 const ProductsPage = () => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
@@ -171,18 +183,18 @@ const ProductsPage = () => {
     return () => clearTimeout(timer)
   }, [])
 
+  const [tempMin, setTempMin] = useState(priceRange.min)
+  const [tempMax, setTempMax] = useState(priceRange.max)
+
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchQuery), 400)
     return () => clearTimeout(timer)
   }, [searchQuery, setDebouncedSearch])
 
-  const handlePriceChange = (field, rawValue) => {
-    const value = rawValue === '' ? 0 : Number(rawValue)
-    setPriceRange({
-      ...priceRange,
-      [field]: value,
-    })
-  }
+  useEffect(() => {
+    setTempMin(priceRange.min)
+    setTempMax(priceRange.max)
+  }, [priceRange.min, priceRange.max])
 
   const toggleBrand = (brand) => {
     const next = selectedBrands.includes(brand)
@@ -203,6 +215,19 @@ const ProductsPage = () => {
       ? selectedSensors.filter((item) => item !== sensor)
       : [...selectedSensors, sensor]
     setSensors(next)
+  }
+
+  const applyPriceFilter = () => {
+    const minVal = Number(tempMin || 0)
+    const maxVal = Number(tempMax || 9999999)
+    if (minVal > maxVal) {
+      alert('Min price cannot be greater than max price')
+      return
+    }
+    setPriceRange({
+      min: minVal,
+      max: maxVal,
+    })
   }
 
   const filteredProducts = useMemo(() => {
@@ -277,11 +302,14 @@ const ProductsPage = () => {
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 md:px-6 lg:flex-row lg:gap-10">
         <aside className="hidden w-72 shrink-0 lg:block">
           <FilterPanel
-            priceRange={priceRange}
+            tempMin={tempMin}
+            tempMax={tempMax}
+            onTempMinChange={setTempMin}
+            onTempMaxChange={setTempMax}
+            onApplyPrice={applyPriceFilter}
             selectedBrands={selectedBrands}
             selectedCategories={selectedCategories}
             selectedSensors={selectedSensors}
-            onPriceChange={handlePriceChange}
             onToggleBrand={toggleBrand}
             onToggleCategory={toggleCategory}
             onToggleSensor={toggleSensor}
@@ -360,11 +388,14 @@ const ProductsPage = () => {
         <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 px-4 py-6">
           <div className="max-h-[90vh] w-full max-w-sm overflow-auto rounded-3xl bg-white p-6 shadow-2xl">
             <FilterPanel
-              priceRange={priceRange}
+              tempMin={tempMin}
+              tempMax={tempMax}
+              onTempMinChange={setTempMin}
+              onTempMaxChange={setTempMax}
+              onApplyPrice={applyPriceFilter}
               selectedBrands={selectedBrands}
               selectedCategories={selectedCategories}
               selectedSensors={selectedSensors}
-              onPriceChange={handlePriceChange}
               onToggleBrand={toggleBrand}
               onToggleCategory={toggleCategory}
               onToggleSensor={toggleSensor}
