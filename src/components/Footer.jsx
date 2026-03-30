@@ -61,7 +61,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3 pb-4">
             <p className="text-xs font-semibold uppercase tracking-[0.4em] text-slate-400">Quick links</p>
             <div className="space-y-2 text-sm text-gray-600">
               {quickLinks.map((link) => (
@@ -104,24 +104,11 @@ const Footer = () => {
                 </Link>
               ))}
             </div>
-            <div className="space-y-2">
-              <p className="text-sm text-gray-500">Subscribe for new drops</p>
-              <div className="flex flex-col gap-2">
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
-                />
-                <button className="w-full rounded-2xl bg-indigo-600 px-4 py-2 mb-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
-                  Subscribe
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
       <div className="border-t border-slate-200 bg-white/60 py-4">
-        <p className="text-center text-xs uppercase tracking-[0.3em] text-slate-400">
+        <p className="text-center text-sm uppercase tracking-[0.3em] text-slate-400 mt-4">
           © 2026 Camera App. All rights reserved.
         </p>
       </div>
