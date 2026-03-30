@@ -12,6 +12,11 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 body {
   @apply bg-gray-50 text-gray-900;
   margin: 0;
@@ -19,6 +24,56 @@ body {
 
 #root {
   min-height: 100vh;
+}
+
+.container {
+  max-width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.product-details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.product-details-grid > div {
+  width: 100%;
+}
+
+.product-details-hero {
+  min-width: 0;
+}
+
+.product-details-image img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.product-title {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.product-details-actions button {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .product-details-grid {
+    flex-direction: row;
+  }
+
+  .product-details-grid > div {
+    width: 50%;
+  }
+
+  .product-details-actions button {
+    width: auto;
+  }
 }
 
 .btn-primary {

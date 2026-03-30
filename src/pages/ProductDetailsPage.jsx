@@ -118,9 +118,9 @@ const ProductDetailsPage = () => {
 
   return (
     <div className="animate-fadeIn mx-auto max-w-6xl space-y-12 py-16 px-4 sm:px-6 lg:px-0">
-      <section className="grid gap-12 lg:grid-cols-2">
-        <div className="space-y-4">
-          <div className="h-[400px] overflow-hidden rounded-2xl bg-gray-100">
+      <section className="grid gap-12 lg:grid-cols-2 product-details-grid">
+        <div className="space-y-4 product-details-hero">
+          <div className="h-[400px] overflow-hidden rounded-2xl bg-gray-100 product-details-image">
             <img
               src={imageSrc}
               alt={product.name}
@@ -129,7 +129,7 @@ const ProductDetailsPage = () => {
                   event.currentTarget.src = fallbackImage
                 }
               }}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
             />
           </div>
         </div>
@@ -143,7 +143,7 @@ const ProductDetailsPage = () => {
             </span>
           </div>
           <div className="space-y-2">
-            <h1 className="text-3xl font-semibold text-gray-900">{product.name}</h1>
+            <h1 className="text-3xl font-semibold text-gray-900 product-title">{product.name}</h1>
             <p className="text-sm text-gray-600">{product.summary}</p>
           </div>
           <div className="flex items-baseline gap-2">
@@ -161,7 +161,7 @@ const ProductDetailsPage = () => {
               <p className="text-lg font-semibold text-gray-900">{product.sensor}</p>
             </div>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 product-details-actions">
             <Button
               className="h-12 px-6 shadow-md"
               onClick={() => {
