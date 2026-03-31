@@ -98,7 +98,7 @@ const CartPage = () => {
       </div>
 
       {/* RIGHT - SUMMARY */}
-      <div className="bg-white p-7 rounded-2xl shadow-lg border sticky top-24 flex flex-col gap-5 min-w-[280px]">
+      <div className="bg-white p-7 rounded-2xl shadow-lg border sticky top-24 flex flex-col gap-5 w-full min-w-0 lg:min-w-[280px]">
         <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
 
         <div className="space-y-3 text-sm">

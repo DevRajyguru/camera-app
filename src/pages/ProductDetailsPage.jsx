@@ -100,16 +100,24 @@ const ProductDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="animate-fadeIn mx-auto max-w-6xl px-4 py-16">
-        <SkeletonCard />
+      <div className="w-full max-w-full overflow-x-hidden">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="animate-fadeIn mx-auto w-full max-w-6xl py-16">
+            <SkeletonCard />
+          </div>
+        </div>
       </div>
     )
   }
 
   if (!product) {
     return (
-      <div className="p-6">
-        <p className="text-lg font-semibold text-gray-900">Product not found</p>
+      <div className="w-full max-w-full overflow-x-hidden">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="py-16">
+            <p className="text-lg font-semibold text-gray-900">Product not found</p>
+          </div>
+        </div>
       </div>
     )
   }
@@ -117,10 +125,12 @@ const ProductDetailsPage = () => {
   const imageSrc = product?.image ?? fallbackImage
 
   return (
-    <div className="animate-fadeIn mx-auto max-w-6xl space-y-12 py-16 px-4 sm:px-6 lg:px-0">
+    <div className="w-full max-w-full overflow-x-hidden">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="animate-fadeIn mx-auto w-full max-w-6xl space-y-12 py-16">
       <section className="grid gap-12 lg:grid-cols-2 product-details-grid">
         <div className="space-y-4 product-details-hero">
-          <div className="w-full aspect-[4/3] overflow-hidden rounded-xl bg-gray-100">
+          <div className="group w-full max-w-full overflow-hidden rounded-xl bg-gray-100 shadow-sm ring-1 ring-slate-200/60 transition-all duration-300 hover:shadow-md">
             <img
               src={imageSrc}
               alt={product.name}
@@ -129,11 +139,11 @@ const ProductDetailsPage = () => {
                   event.currentTarget.src = fallbackImage
                 }
               }}
-              className="h-full w-full object-cover"
+              className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105"
             />
           </div>
         </div>
-        <div className="space-y-6 rounded-2xl bg-white/70 p-6 shadow-lg backdrop-blur-md">
+        <div className="space-y-6 rounded-2xl bg-white/70 p-6 shadow-lg ring-1 ring-slate-200/60 backdrop-blur-md transition-shadow duration-300 hover:shadow-xl">
           <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.5em] text-indigo-600">
             <span className="rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1">
               {product.category}
@@ -152,16 +162,16 @@ const ProductDetailsPage = () => {
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-xl border border-dashed border-gray-200 bg-white/80 px-4 py-3 shadow-sm">
+            <div className="rounded-xl border border-dashed border-gray-200 bg-white/80 px-4 py-3 shadow-sm transition-shadow duration-300 hover:shadow-md">
               <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-700">Brand</p>
               <p className="text-lg font-semibold text-gray-900">{product.brand}</p>
             </div>
-            <div className="rounded-xl border border-dashed border-gray-200 bg-white/80 px-4 py-3 shadow-sm">
+            <div className="rounded-xl border border-dashed border-gray-200 bg-white/80 px-4 py-3 shadow-sm transition-shadow duration-300 hover:shadow-md">
               <p className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-700">Sensor</p>
               <p className="text-lg font-semibold text-gray-900">{product.sensor}</p>
             </div>
           </div>
-          <div className="flex gap-3 product-details-actions">
+          <div className="flex flex-wrap gap-3 product-details-actions">
             <Button
               className="h-12 px-6 shadow-md"
               onClick={() => {
@@ -173,10 +183,10 @@ const ProductDetailsPage = () => {
               Add to Cart
             </Button>
             <Button
-              className={`h-12 px-6 shadow-md rounded-2xl transition ${
+              className={`h-12 px-6 shadow-md rounded-2xl transition-all duration-300 active:scale-95 ${
                 isInWishlist
                   ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                  : 'text-indigo-600 border border-indigo-200 hover:bg-indigo-50'
+                  : 'text-indigo-600 border border-indigo-200 hover:bg-indigo-50 hover:shadow-lg'
               }`}
               onClick={() => {
                 if (!product || isInWishlist) {
@@ -242,6 +252,8 @@ const ProductDetailsPage = () => {
         </div>
         <SimilarProductsList products={similarProducts} />
       </section>
+        </div>
+      </div>
     </div>
   )
 }

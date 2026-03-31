@@ -11,9 +11,11 @@ const MainLayout = ({ children }) => {
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="flex flex-1 flex-col bg-slate-50 text-slate-900">
         <Navbar />
-        <main className="flex-1 mx-auto flex max-w-7xl flex-col px-4 py-10 sm:px-6 lg:px-8">
-          {children}
-        </main>
+        <div className="w-full max-w-full overflow-x-hidden flex-1">
+          <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8 flex flex-col flex-1">
+            {children}
+          </main>
+        </div>
         <Footer />
       </div>
       {compareItems.length > 0 && (

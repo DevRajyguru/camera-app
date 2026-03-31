@@ -16,48 +16,42 @@ const ProductCard = ({ product }) => {
     }).format(product.priceValue ?? 0)
 
   return (
-<article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:scale-[1.03] hover:shadow-xl cursor-pointer">
-      <div className="relative">
-        <div className="h-48 w-full overflow-hidden rounded-t-2xl bg-gray-100">
-          <img
-            src={product?.image}
-            alt={product?.name}
-            className="h-full w-full object-cover"
-          />
-        </div>
-        <span className="absolute inset-x-0 bottom-3 mx-auto w-max rounded-full bg-black/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-white shadow-lg">
+    <article className="group overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-slate-200/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
+        <img
+          src={product?.image}
+          alt={product?.name}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <span className="absolute left-3 top-3 rounded-full bg-black/70 px-2 py-1 text-xs font-semibold text-white backdrop-blur-sm">
           {product.category}
         </span>
       </div>
-      <div className="flex-1 space-y-2 px-5 py-6">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
-            <span className="text-base font-bold text-indigo-600">{priceLabel}</span>
-          </div>
-          <p className="text-xs uppercase tracking-[0.3em] text-gray-600">
-            {product.brand} • {product.sensor}
-          </p>
-      </div>
-      <div className="mt-auto flex flex-wrap items-center justify-between border-t border-gray-100 px-5 py-4 gap-2">
-        <div className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-gray-500">
-          <div className="h-2 w-2 rounded-full bg-indigo-200"></div>
-          Live
+
+      <div className="p-4">
+        <h3 className="text-base font-semibold text-slate-900 line-clamp-2">{product.name}</h3>
+        <p className="mt-1 text-xs text-gray-500">
+          {product.brand} - {product.sensor}
+        </p>
+        <p className="mt-2 text-lg font-bold text-indigo-600">{priceLabel}</p>
+
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+          <button
+            type="button"
+            className="w-full rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:bg-gray-50 hover:shadow-md active:scale-95 sm:w-auto"
+            onClick={() => navigate(`/products/${product.id}`)}
+          >
+            View
+          </button>
+          <button
+            type="button"
+            disabled={isInCompare || compareItems.length >= 4}
+            className="w-full rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+            onClick={() => addToCompare(product)}
+          >
+            {isInCompare ? 'In Compare' : 'Add to Compare'}
+          </button>
         </div>
-        <button
-          type="button"
-          className="rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 px-5 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
-          onClick={() => navigate(`/products/${product.id}`)}
-        >
-          View
-        </button>
-        <button
-          type="button"
-          disabled={isInCompare || compareItems.length >= 4}
-          className="rounded-full border border-indigo-200 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-indigo-600 transition-all duration-300 hover:scale-105 hover:shadow-lg disabled:cursor-not-allowed disabled:text-indigo-300"
-          onClick={() => addToCompare(product)}
-        >
-          {isInCompare ? 'In Compare' : 'Add to Compare'}
-        </button>
       </div>
     </article>
   )

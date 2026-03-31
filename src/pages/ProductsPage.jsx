@@ -318,20 +318,20 @@ const ProductsPage = () => {
         </aside>
 
         <section className="flex-1 space-y-6">
-          <div className="flex flex-col gap-4 rounded-3xl border border-gray-200 bg-white px-6 py-5 shadow-sm md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0 flex flex-col gap-3 rounded-3xl border border-gray-200 bg-white px-6 py-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-3">
               <h2 className="text-lg font-semibold text-gray-900">Product Catalog</h2>
               <span className="text-sm text-gray-500">
                 {sortedProducts.length} items
               </span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="min-w-0 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
               <Button
-                className="lg:hidden border border-gray-200 bg-white/80 text-gray-700 hover:text-white hover:bg-indigo-500"
+                className="w-full sm:w-auto lg:hidden bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold tracking-wide shadow-md shadow-indigo-500/30 transition-all duration-300 hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg"
                 onClick={() => setIsFilterModalOpen(true)}
               >
                 <span className="-ml-0.5 text-lg leading-none">+</span>
-                <span className="ml-2 text-xs uppercase tracking-[0.3em] text-gray-700">Filters</span>
+                <span className="ml-2 text-xs uppercase tracking-[0.3em] text-white">Filters</span>
               </Button>
               <label className="hidden text-xs uppercase tracking-[0.4em] text-gray-400 lg:block">
                 Sort
@@ -339,7 +339,7 @@ const ProductsPage = () => {
               <select
                 value={sortOption}
                 onChange={(event) => setSortOption(event.target.value)}
-                className="mr-4 rounded-2xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 focus:border-indigo-500 focus:outline-none"
+                className="w-full sm:w-auto sm:mr-4 rounded-2xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 focus:border-indigo-500 focus:outline-none"
               >
                 {sortOptions.map((option) => (
                   <option key={option.value} value={option.value}>
