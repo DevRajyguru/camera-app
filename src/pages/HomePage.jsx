@@ -175,7 +175,10 @@ const HomePage = () => {
               <div className="space-y-3 px-6 py-6">
                 <p className="text-xs uppercase tracking-[0.5em] text-gray-500">{category.subtitle}</p>
                 <h3 className="text-3xl font-semibold text-gray-900">{category.title}</h3>
-                <Button className="w-full justify-between px-6 py-2 uppercase tracking-[0.4em] transition-all duration-300 hover:shadow-lg active:scale-95">
+                <Button
+                  className="w-full justify-between px-6 py-2 uppercase tracking-[0.4em] transition-all duration-300 hover:shadow-lg active:scale-95"
+                  onClick={() => navigate(`/products?category=${encodeURIComponent(category.title)}`)}
+                >
                   Browse
                   <span className="text-2xl leading-none">&rarr;</span>
                 </Button>

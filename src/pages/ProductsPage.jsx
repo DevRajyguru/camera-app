@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Button from '../components/Button.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import SkeletonCard from '../components/SkeletonCard.jsx'
@@ -146,13 +147,15 @@ const FilterPanel = ({
 }
 
 const ProductsPage = () => {
+  const [searchParams] = useSearchParams()
+  const categoryParamRaw = searchParams.get('category')
+  const categoryParam = (categoryParamRaw || '').toLowerCase().trim()
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [visibleCount, setVisibleCount] = useState(6)
   const [loading, setLoading] = useState(true)
 
   const searchQuery = useStore((state) => state.searchQuery)
   const debouncedSearch = useStore((state) => state.debouncedSearch)
-  const setSearchQuery = useStore((state) => state.setSearchQuery)
   const setDebouncedSearch = useStore((state) => state.setDebouncedSearch)
   const selectedBrands = useStore((state) => state.selectedBrands)
   const selectedCategories = useStore((state) => state.selectedCategories)
@@ -182,6 +185,10 @@ const ProductsPage = () => {
     const timer = setTimeout(() => setLoading(false), 800)
     return () => clearTimeout(timer)
   }, [])
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [categoryParam])
 
   const [tempMin, setTempMin] = useState(priceRange.min)
   const [tempMax, setTempMax] = useState(priceRange.max)
@@ -236,17 +243,42 @@ const ProductsPage = () => {
       const name = product.name?.toLowerCase() ?? ''
       const brand = product.brand?.toLowerCase() ?? ''
       const category = product.category?.toLowerCase() ?? ''
-      const sensor = product.sensor?.toLowerCase() ?? ''
       const price = product.priceValue ?? 0
 
+      const tokens = query.split(/\s+/).filter(Boolean)
+      const categoryBoost = new Set()
+      if (tokens.includes('camera') || tokens.includes('cameras')) {
+        categoryBoost.add('dslr')
+        categoryBoost.add('mirrorless')
+      }
+      if (tokens.includes('lens') || tokens.includes('lenses')) {
+        categoryBoost.add('lenses')
+      }
+      if (
+        tokens.includes('accessory') ||
+        tokens.includes('accessories') ||
+        tokens.includes('flash') ||
+        tokens.includes('grip')
+      ) {
+        categoryBoost.add('accessories')
+      }
+
       const matchesSearch =
-        query === '' || name.includes(query) || brand.includes(query) || category.includes(query)
+        query === '' ||
+        name.includes(query) ||
+        brand.includes(query) ||
+        category.includes(query) ||
+        (categoryBoost.size > 0 && categoryBoost.has(category))
 
       const matchesBrand =
         selectedBrands.length === 0 || selectedBrands.includes(product.brand)
 
+      const matchesCategoryParam = categoryParam === '' || category === categoryParam
+
       const matchesCategory =
-        selectedCategories.length === 0 || selectedCategories.includes(product.category)
+        categoryParam !== '' ||
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(product.category)
 
       const matchesSensor =
         selectedSensors.length === 0 || selectedSensors.includes(product.sensor)
@@ -256,6 +288,7 @@ const ProductsPage = () => {
       return (
         matchesSearch &&
         matchesBrand &&
+        matchesCategoryParam &&
         matchesCategory &&
         matchesSensor &&
         matchesPrice
@@ -263,6 +296,7 @@ const ProductsPage = () => {
     })
   }, [
     debouncedSearch,
+    categoryParam,
     selectedBrands,
     selectedCategories,
     selectedSensors,
@@ -348,16 +382,6 @@ const ProductsPage = () => {
                 ))}
               </select>
             </div>
-          </div>
-
-          <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Search cameras, lenses, accessories"
-              className="w-full rounded-2xl border border-gray-200 px-4 py-2 text-sm focus:border-indigo-500 focus:outline-none"
-            />
           </div>
 
           {loading ? (
